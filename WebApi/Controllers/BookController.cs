@@ -22,9 +22,18 @@ namespace WebApi.Controllers
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
-            var request = new GetAllRequest();
+            var request = new GetAlBooklRequest();
             var books = await _mediator.Send(request);
             return Ok(books);
+        }
+
+        [HttpPost("GetByTitle")]
+        public async Task<IActionResult> GetByTitle(GetBookByTitleRequest request)
+        {
+            var result = await _mediator.Send(request);
+            if (result != null)
+                return Ok(result);
+            return BadRequest("Book Not Found");
         }
 
         [HttpPost("Create")]

@@ -1,5 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.Repositories;
+using Infrastucture.DataBase;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,29 +12,48 @@ namespace Infrastucture.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        public Task CreateAsync(User entity)
+        private readonly AppDbContext _appDbContext;
+
+        public UserRepository(AppDbContext appDbContext)
         {
-            throw new NotImplementedException();
+            _appDbContext = appDbContext;
         }
 
-        public Task<bool> DeleteAsync(string name)
+        public async Task CreateAsync(User entity)
         {
-            throw new NotImplementedException();
+            await _appDbContext.Users.AddAsync(entity);
         }
 
-        public Task<bool> DeleteAsync(Guid Id)
+        public async Task<bool> DeleteAsync(string name)
         {
-            throw new NotImplementedException();
+            var user = await _appDbContext.Users.FirstOrDefaultAsync(u => u.Username == name);
+            if (user != null)
+            {
+                _appDbContext.Users.Remove(user);
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> DeleteAsync(Guid Id)
+        {
+            var user = await _appDbContext.Users.FirstOrDefaultAsync(u => u.Id == Id);
+            if (user != null)
+            {
+                _appDbContext.Users.Remove(user);
+                return true;
+            }
+            return false;
         }
 
         public Task<List<User>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return _appDbContext.Users.AsNoTracking().ToListAsync();
         }
 
         public void Update(User entity)
         {
-            throw new NotImplementedException();
+            _appDbContext.Users.Update(entity);
         }
     }
 }

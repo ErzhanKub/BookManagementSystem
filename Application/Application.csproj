@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <Folder Include="Baskets\" />
-    <Folder Include="Users\" />
   </ItemGroup>
 
 </Project>
