@@ -1,6 +1,8 @@
 ﻿using Application.Shared;
 using Domain.Repositories;
+using Infrastructure.DataBase;
 using Infrastucture.DataBase;
+using Infrastucture.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +24,11 @@ namespace Infrastucture
             {
                 options.UseSqlServer(configuration.GetConnectionString("Default"));
             });
+
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IBookRepository,BookRepository>();
+            services.AddTransient<IBasketRepository,BasketRepository>();
 
             return services;
         }

@@ -1,5 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.Repositories;
+using Infrastucture.DataBase;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +12,13 @@ namespace Infrastucture.Repositories
 {
     public class BookRepository : IBookRepository
     {
+        private readonly AppDbContext _appDbContext;
+
+        public BookRepository(AppDbContext appDbContext)
+        {
+            _appDbContext = appDbContext;
+        }
+
         public Task CreateAsync(Book entity)
         {
             throw new NotImplementedException();
@@ -27,7 +36,7 @@ namespace Infrastucture.Repositories
 
         public Task<List<Book>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return _appDbContext.Books.AsNoTracking().ToListAsync();
         }
 
         public void Update(Book entity)
