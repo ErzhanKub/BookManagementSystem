@@ -16,6 +16,8 @@ namespace Infrastucture.DataBase
                 new Role { Id = 1, Name = "user" },
                 new Role { Id = 2, Name = "admin" }
             );
+            modelBuilder.Entity<Book>().HasIndex(b=>b.Title).IsUnique();
         }
+
     }
 }

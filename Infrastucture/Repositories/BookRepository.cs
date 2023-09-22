@@ -24,23 +24,37 @@ namespace Infrastucture.Repositories
             await _appDbContext.Books.AddAsync(entity);
         }
 
-        public async void Delete(string name)
+        public async Task<bool> DeleteAsync(string name)
         {
             var book = await _appDbContext.Books.FirstOrDefaultAsync(b => b.Title == name);
             if (book != null)
+            {
                 _appDbContext.Books.Remove(book);
+                return true;
+            }
+            return false;
         }
 
-        public async void Delete(Guid Id)
+        public async Task<bool> DeleteAsync(Guid Id)
         {
             var book = await _appDbContext.Books.FirstOrDefaultAsync(b => b.Id == Id);
             if (book != null)
+            {
                 _appDbContext.Books.Remove(book);
+                return true;
+            }
+            return false;
         }
 
         public Task<List<Book>> GetAllAsync()
         {
             return _appDbContext.Books.AsNoTracking().ToListAsync();
+        }
+
+        public Task<Book> GetByTitle(string title)
+        {
+            var book = _appDbContext.Books.FirstOrDefaultAsync(b => b.Title == title);
+            return book;
         }
 
         public void Update(Book entity)

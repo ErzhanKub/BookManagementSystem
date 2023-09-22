@@ -33,5 +33,30 @@ namespace WebApi.Controllers
             var response = await _mediator.Send(command);
             return Ok(response);
         }
+
+        [HttpDelete("DeleteByTitle")]
+        public async Task<IActionResult> Delete(DeleteBookByTitleCommand command)
+        {
+            var result = await _mediator.Send(command);
+            if (result == true)
+                return Ok();
+            return BadRequest("No delete");//TODO
+        }
+
+        [HttpDelete("DeleteById")]
+        public async Task<IActionResult> Delete(DeleteBookByIdCommand command)
+        {
+            var result = await _mediator.Send(command);
+            if (result == true)
+                return Ok();
+            return BadRequest("No delete"); //TODO
+        }
+
+        [HttpPost("Update")]
+        public async Task<IActionResult> Update(UpdateBookCommand command)
+        {
+            var response = await _mediator.Send(command);
+            return Ok(response);
+        }
     }
 }

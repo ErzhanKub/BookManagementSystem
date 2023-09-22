@@ -15,12 +15,12 @@ namespace Infrastucture.Repositories
             throw new NotImplementedException();
         }
 
-        public void Delete(string username)
+        public Task<bool> DeleteAsync(string name)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete(Guid Id)
+        public Task<bool> DeleteAsync(Guid Id)
         {
             throw new NotImplementedException();
         }
