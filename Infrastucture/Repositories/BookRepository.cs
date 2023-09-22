@@ -19,19 +19,23 @@ namespace Infrastucture.Repositories
             _appDbContext = appDbContext;
         }
 
-        public Task CreateAsync(Book entity)
+        public async Task CreateAsync(Book entity)
         {
-            throw new NotImplementedException();
+            await _appDbContext.Books.AddAsync(entity);
         }
 
-        public void Delete(string username)
+        public async void Delete(string name)
         {
-            throw new NotImplementedException();
+            var book = await _appDbContext.Books.FirstOrDefaultAsync(b => b.Title == name);
+            if (book != null)
+                _appDbContext.Books.Remove(book);
         }
 
-        public void Delete(Guid Id)
+        public async void Delete(Guid Id)
         {
-            throw new NotImplementedException();
+            var book = await _appDbContext.Books.FirstOrDefaultAsync(b => b.Id == Id);
+            if (book != null)
+                _appDbContext.Books.Remove(book);
         }
 
         public Task<List<Book>> GetAllAsync()
@@ -41,7 +45,7 @@ namespace Infrastucture.Repositories
 
         public void Update(Book entity)
         {
-            throw new NotImplementedException();
+            _appDbContext.Books.Update(entity);
         }
     }
 }

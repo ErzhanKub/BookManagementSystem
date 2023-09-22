@@ -1,4 +1,5 @@
-﻿using Application.Books.Requests;
+﻿using Application.Books.Commands;
+using Application.Books.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,13 @@ namespace WebApi.Controllers
             var request = new GetAllRequest();
             var books = await _mediator.Send(request);
             return Ok(books);
+        }
+
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create(CreateBookCommand command)
+        {
+            var response = await _mediator.Send(command);
+            return Ok(response);
         }
     }
 }

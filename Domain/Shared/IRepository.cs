@@ -5,7 +5,7 @@
         Task<List<TEntity>> GetAllAsync();
         Task CreateAsync(TEntity entity);
         void Update(TEntity entity);
-        void Delete(string username);
+        void Delete(string name);
         void Delete(Guid Id);
     }
 }
