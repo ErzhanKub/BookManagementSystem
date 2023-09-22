@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Application.Users.Commands
 {
-    public record CreateUserResponse
+    public record UpdateUserResponse
     {
         public Guid Id { get; init; }
         public required string Username { get; init; }
@@ -19,43 +19,48 @@ namespace Application.Users.Commands
         public required Role Role { get; init; }
         public Basket? Basket { get; init; }
     }
-    public record CreateUserCommand : IRequest<CreateUserResponse>
+    public record UpdateUserCommand : IRequest<UpdateUserResponse>
     {
         public required string Username { get; init; }
         public required string PasswordHash { get; init; }
         public required Role Role { get; init; }
+        public Basket? Basket { get; init; }
     }
 
-    internal class CreateUserHandler : IRequestHandler<CreateUserCommand, CreateUserResponse>
+    internal class UpdateUserHandler : IRequestHandler<UpdateUserCommand, UpdateUserResponse>
     {
         private readonly IUserRepository _userRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CreateUserHandler(IUserRepository userRepository, IUnitOfWork unitOfWork)
+        public UpdateUserHandler(IUserRepository userRepository, IUnitOfWork unitOfWork)
         {
             _userRepository = userRepository;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<CreateUserResponse> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+        public async Task<UpdateUserResponse> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
-            var user = new User
+            var user = await _userRepository.GetByName(request.Username);
+            if (user != null)
             {
-                Username = request.Username,
-                PasswordHash = request.Password,
-                Role = request.Role,
-            };
-            await _userRepository.CreateAsync(user);
-            await _unitOfWork.CommitAsync();
+                user.Username = request.Username;
+                user.PasswordHash = request.PasswordHash;
+                user.Role = request.Role;
+                user.Basket = request.Basket;
 
-            var response = new CreateUserResponse
+                _userRepository.Update(user);
+                await _unitOfWork.CommitAsync();
+            }
+
+            var response = new UpdateUserResponse
             {
                 Id = user.Id,
                 Username = user.Username,
-                Password = user.PasswordHash,
+                PasswordHash = user.PasswordHash,
                 Role = user.Role,
-                Basket = user.Basket,
+                Basket = user.Basket
             };
+
             return response;
         }
     }

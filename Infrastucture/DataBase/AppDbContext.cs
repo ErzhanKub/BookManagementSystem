@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastucture.DataBase
@@ -9,14 +10,15 @@ namespace Infrastucture.DataBase
         public DbSet<User> Users => Set<User>();
         public DbSet<Book> Books => Set<Book>();
         public DbSet<Basket> Baskets => Set<Basket>();
-        public DbSet<Role> Roles => Set<Role>();
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Role>().HasData(
-                new Role { Id = 1, Name = "user" },
-                new Role { Id = 2, Name = "admin" }
-            );
-            modelBuilder.Entity<Book>().HasIndex(b=>b.Title).IsUnique();
+            modelBuilder.Entity<Book>()
+                .HasIndex(b => b.Title)
+                .IsUnique();
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Username)
+                .IsUnique();
         }
 
     }

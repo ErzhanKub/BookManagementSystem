@@ -51,6 +51,12 @@ namespace Infrastucture.Repositories
             return _appDbContext.Users.AsNoTracking().ToListAsync();
         }
 
+        public Task<User> GetByName(string name)
+        {
+            var user = _appDbContext.Users.FirstOrDefaultAsync(u => u.Username == name);
+            return user;
+        }
+
         public void Update(User entity)
         {
             _appDbContext.Users.Update(entity);

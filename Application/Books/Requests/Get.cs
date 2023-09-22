@@ -8,38 +8,16 @@ using System.Threading.Tasks;
 
 namespace Application.Books.Requests
 {
-    public record GetBookResponse
+    public record GetBooksResponse
     {
         public Guid Id { get; init; }
         public required string Title { get; init; }
         public string? Description { get; init; }
         public decimal Price { get; init; }
     }
-    public record GetAlBooklRequest : IRequest<IEnumerable<GetBookResponse>> { }
-    public record GetBookByTitleRequest : IRequest<GetBookResponse> { public required string Title { get; init; } }
-    internal class GetBookByTitle : IRequestHandler<GetBookByTitleRequest, GetBookResponse>
-    {
-        private readonly IBookRepository _bookRepository;
-
-        public GetBookByTitle(IBookRepository bookRepository)
-        {
-            _bookRepository = bookRepository;
-        }
-
-        public async Task<GetBookResponse> Handle(GetBookByTitleRequest request, CancellationToken cancellationToken)
-        {
-            var book = await _bookRepository.GetByTitle(request.Title);
-            var response = new GetBookResponse
-            {
-                Id = book.Id,
-                Title = book.Title,
-                Description = book.Description,
-                Price = book.Price,
-            };
-            return response;
-        }
-    }
-    internal class GetAllBookHandler : IRequestHandler<GetAlBooklRequest, IEnumerable<GetBookResponse>>
+    public record GetAlBooklRequest : IRequest<IEnumerable<GetBooksResponse>> { }
+    
+    internal class GetAllBookHandler : IRequestHandler<GetAlBooklRequest, IEnumerable<GetBooksResponse>>
     {
         private readonly IBookRepository _bookRepository;
 
@@ -48,13 +26,13 @@ namespace Application.Books.Requests
             _bookRepository = bookRepository;
         }
 
-        public async Task<IEnumerable<GetBookResponse>> Handle(GetAlBooklRequest request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<GetBooksResponse>> Handle(GetAlBooklRequest request, CancellationToken cancellationToken)
         {
             var books = await _bookRepository.GetAllAsync();
-            var response = new List<GetBookResponse>();
+            var response = new List<GetBooksResponse>();
             foreach (var book in books)
             {
-                var result = new GetBookResponse()
+                var result = new GetBooksResponse()
                 {
                     Id = book.Id,
                     Title = book.Title,

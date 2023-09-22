@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Users.Requests
+namespace Domain.Enums
 {
-    public record GetAllUserCommand
+    public enum Role
     {
+        User = 1,
+        Admin = 2,
     }
 }
