@@ -9,7 +9,7 @@ namespace Application.Users.Requests
     {
         public Guid Id { get; set; }
         public required string Username { get; set; }
-        public required string Password { get; set; }
+        public required string PasswordHash { get; set; }
         public required Role Role { get; init; }
         public Basket? Basket { get; set; }
     }
@@ -30,7 +30,7 @@ namespace Application.Users.Requests
             {
                 Id = user.Id,
                 Username = user.Username,
-                Password = user.PasswordHash,
+                PasswordHash = user.PasswordHash,
                 Role = user.Role,
                 Basket = user.Basket,
             };

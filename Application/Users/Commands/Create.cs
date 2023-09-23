@@ -18,7 +18,7 @@ namespace Application.Users.Commands
     public record CreateUserCommand : IRequest<CreateUserResponse>
     {
         public required string Username { get; init; }
-        public required string PasswordHash { get; init; }
+        public required string Password { get; init; }
         public required Role Role { get; init; }
     }
 
@@ -38,7 +38,7 @@ namespace Application.Users.Commands
             var user = new User
             {
                 Username = request.Username,
-                PasswordHash = request.PasswordHash,
+                PasswordHash = request.Password,
                 Role = request.Role,
             };
             await _userRepository.CreateAsync(user);

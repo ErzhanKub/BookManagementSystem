@@ -11,7 +11,7 @@ namespace Application.Users.Commands
     public record LoginCommand : IRequest<string>
     {
         public required string Username { get; init; }
-        public required string PasswordHash { get; init; }
+        public required string Password { get; init; }
     }
 
     internal class LoginHandler : IRequestHandler<LoginCommand, string>
@@ -25,19 +25,19 @@ namespace Application.Users.Commands
             _userRepository = userRepository;
         }
 
-        public Task<string> Handle(LoginCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
-            var user = _userRepository.GetByName(request.Username);
-            if (user != null)
+            var user = await _userRepository.CheckUserCredentials(request.Username, request.Password);
+            if (user == true)
             {
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, request.Username),
                 };
                 var tokenString = GetTokenString(claims, DateTime.UtcNow.AddMinutes(30));
-                return Task.FromResult(tokenString);
+                return tokenString;
             }
-            return Task.FromResult("Not Found");
+            return "Not Found";
         }
 
         private string GetTokenString(List<Claim> claims, DateTime exp)

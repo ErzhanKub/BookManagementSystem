@@ -17,7 +17,7 @@ namespace Application.Users.Commands
     public record UpdateUserCommand : IRequest<UpdateUserResponse>
     {
         public required string Username { get; init; }
-        public required string PasswordHash { get; init; }
+        public required string Password { get; init; }
         public required Role Role { get; init; }
     }
 
@@ -38,7 +38,7 @@ namespace Application.Users.Commands
             if (user != null)
             {
                 user.Username = request.Username;
-                user.PasswordHash = request.PasswordHash;
+                user.PasswordHash = request.Password;
                 user.Role = request.Role;
 
                 _userRepository.Update(user);
