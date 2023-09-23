@@ -7,6 +7,6 @@ namespace Domain.Repositories
     {
         Task<string> HashPasswordAsync(string password);
         Task<User?> CheckUserCredentials(string username, string password);
-        Task<User> GetByName(string name);
+        Task<User?> GetByName(string name);
     }
 }

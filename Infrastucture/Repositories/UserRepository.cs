@@ -61,10 +61,9 @@ namespace Infrastucture.Repositories
             return await _appDbContext.Users.AsNoTracking().ToListAsync().ConfigureAwait(false);
         }
 
-        public async Task<User> GetByName(string name)
+        public async Task<User?> GetByName(string name)
         {
             var user = await _appDbContext.Users.FirstOrDefaultAsync(u => u.Username == name).ConfigureAwait(false);
-            //TODO: Проверка на null
             return user;
         }
 

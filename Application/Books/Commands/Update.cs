@@ -11,14 +11,14 @@ namespace Application.Books.Commands
         public string? Description { get; init; }
         public decimal Price { get; init; }
     }
-    public record UpdateBookCommand : IRequest<UpdateBookResponse>
+    public record UpdateBookCommand : IRequest<UpdateBookResponse?>
     {
         public required string Title { get; init; }
         public string? Description { get; init; }
         public decimal Price { get; init; }
     }
 
-    internal class UpdateBookHandler : IRequestHandler<UpdateBookCommand, UpdateBookResponse>
+    internal class UpdateBookHandler : IRequestHandler<UpdateBookCommand, UpdateBookResponse?>
     {
         private readonly IBookRepository _bookRepository;
         private readonly IUnitOfWork _unitOfWork;
@@ -29,7 +29,7 @@ namespace Application.Books.Commands
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<UpdateBookResponse> Handle(UpdateBookCommand request, CancellationToken cancellationToken)
+        public async Task<UpdateBookResponse?> Handle(UpdateBookCommand request, CancellationToken cancellationToken)
         {
             var book = await _bookRepository.GetByTitle(request.Title);
             if (book != null)
@@ -40,16 +40,17 @@ namespace Application.Books.Commands
 
                 _bookRepository.Update(book);
                 await _unitOfWork.CommitAsync();
-            }
 
-            var response = new UpdateBookResponse
-            {
-                Id = book.Id,
-                Title = book.Title,
-                Description = book.Description,
-                Price = book.Price,
-            };
-            return response;
+                var response = new UpdateBookResponse
+                {
+                    Id = book.Id,
+                    Title = book.Title,
+                    Description = book.Description,
+                    Price = book.Price,
+                };
+                return response;
+            }
+            return default;
         }
     }
 }

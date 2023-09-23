@@ -2,6 +2,7 @@
 using Application.Users.Commands.Delete;
 using Application.Users.Requests;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -18,7 +19,7 @@ namespace WebApi.Controllers
             _mediator = mediator;
             _logger = logger;
         }
-
+        [AllowAnonymous]
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
@@ -31,14 +32,18 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetByName(GetUserByNameCommand command)
         {
             var user = await _mediator.Send(command);
-            return Ok(user);
+            if (user != null)
+                return Ok(user);
+            return BadRequest("User not found");
         }
 
         [HttpPost("Update")]
         public async Task<IActionResult> Update(UpdateUserCommand command)
         {
-            var response = await _mediator.Send(command);
-            return Ok(response);
+            var user = await _mediator.Send(command);
+            if (user != null)
+                return Ok(user);
+            return BadRequest("User not found");
         }
 
         [HttpDelete("DeleteByName")]
@@ -47,7 +52,7 @@ namespace WebApi.Controllers
             var response = await _mediator.Send(command);
             if (response == true)
                 return Ok(response);
-            return BadRequest();
+            return BadRequest("User not found");
         }
 
         [HttpDelete("DeleteById")]
@@ -56,7 +61,7 @@ namespace WebApi.Controllers
             var response = await _mediator.Send(command);
             if (response == true)
                 return Ok(response);
-            return BadRequest();
+            return BadRequest("User not found");
         }
     }
 }

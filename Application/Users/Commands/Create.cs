@@ -41,6 +41,7 @@ namespace Application.Users.Commands
                 PasswordHash = request.Password,
                 Role = request.Role,
             };
+
             await _userRepository.CreateAsync(user);
             await _unitOfWork.CommitAsync();
 
