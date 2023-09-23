@@ -8,6 +8,9 @@
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="12.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.24.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.24.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,7 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Baskets\" />
+    <Folder Include="Baskets\Commands\" />
+    <Folder Include="Baskets\Requests\" />
   </ItemGroup>
 
 </Project>
