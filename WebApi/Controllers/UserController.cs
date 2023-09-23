@@ -1,7 +1,7 @@
 ﻿using Application.Users.Commands;
+using Application.Users.Commands.Delete;
 using Application.Users.Requests;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -19,13 +19,6 @@ namespace WebApi.Controllers
             _logger = logger;
         }
 
-        [HttpPost("Create")]
-        public async Task<IActionResult> Create(CreateUserCommand command)
-        {
-            var response = await _mediator.Send(command);
-            return Ok(response);
-        }
-
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
@@ -39,6 +32,38 @@ namespace WebApi.Controllers
         {
             var user = await _mediator.Send(command);
             return Ok(user);
+        }
+
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create(CreateUserCommand command)
+        {
+            var response = await _mediator.Send(command);
+            return Ok(response);
+        }
+
+        [HttpPost("Update")]
+        public async Task<IActionResult> Update(UpdateUserCommand command)
+        {
+            var response = await _mediator.Send(command);
+            return Ok(response);
+        }
+
+        [HttpDelete("DeleteByName")]
+        public async Task<IActionResult> Delete(DeleteUserByNameCommand command)
+        {
+            var response = await _mediator.Send(command);
+            if (response == true)
+                return Ok(response);
+            return BadRequest();
+        }
+
+        [HttpDelete("DeleteById")]
+        public async Task<IActionResult> Delete(DeleteUserByIdCommand command)
+        {
+            var response = await _mediator.Send(command);
+            if (response == true)
+                return Ok(response);
+            return BadRequest();
         }
     }
 }

@@ -3,11 +3,6 @@ using Domain.Entities;
 using Domain.Enums;
 using Domain.Repositories;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Users.Commands
 {
@@ -42,7 +37,7 @@ namespace Application.Users.Commands
             var user = new User
             {
                 Username = request.Username,
-                PasswordHash = request.Password,
+                PasswordHash = request.PasswordHash,
                 Role = request.Role,
             };
             await _userRepository.CreateAsync(user);
@@ -52,7 +47,7 @@ namespace Application.Users.Commands
             {
                 Id = user.Id,
                 Username = user.Username,
-                Password = user.PasswordHash,
+                PasswordHash = user.PasswordHash,
                 Role = user.Role,
                 Basket = user.Basket,
             };

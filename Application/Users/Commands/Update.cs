@@ -3,11 +3,6 @@ using Domain.Entities;
 using Domain.Enums;
 using Domain.Repositories;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Users.Commands
 {
@@ -24,7 +19,6 @@ namespace Application.Users.Commands
         public required string Username { get; init; }
         public required string PasswordHash { get; init; }
         public required Role Role { get; init; }
-        public Basket? Basket { get; init; }
     }
 
     internal class UpdateUserHandler : IRequestHandler<UpdateUserCommand, UpdateUserResponse>
@@ -46,7 +40,6 @@ namespace Application.Users.Commands
                 user.Username = request.Username;
                 user.PasswordHash = request.PasswordHash;
                 user.Role = request.Role;
-                user.Basket = request.Basket;
 
                 _userRepository.Update(user);
                 await _unitOfWork.CommitAsync();

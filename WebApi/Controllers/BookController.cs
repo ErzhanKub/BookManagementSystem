@@ -2,7 +2,6 @@
 using Application.Books.Commands.Delete;
 using Application.Books.Requests;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -44,6 +43,13 @@ namespace WebApi.Controllers
             return Ok(response);
         }
 
+        [HttpPost("Update")]
+        public async Task<IActionResult> Update(UpdateBookCommand command)
+        {
+            var response = await _mediator.Send(command);
+            return Ok(response);
+        }
+
         [HttpDelete("DeleteByTitle")]
         public async Task<IActionResult> Delete(DeleteBookByTitleCommand command)
         {
@@ -60,13 +66,6 @@ namespace WebApi.Controllers
             if (result == true)
                 return Ok();
             return BadRequest("No delete"); //TODO
-        }
-
-        [HttpPost("Update")]
-        public async Task<IActionResult> Update(UpdateBookCommand command)
-        {
-            var response = await _mediator.Send(command);
-            return Ok(response);
         }
     }
 }
