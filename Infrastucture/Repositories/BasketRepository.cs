@@ -14,17 +14,16 @@ namespace Infrastucture.Repositories
             _appDbContext = appDbContext;
         }
 
-        public Task<Book> AddBookToBasketAsync(string bookTitle)
+        public async Task<bool> AddBookToBasketAsync(string bookTitle, Basket basket)
         {
-            //var book = await _appDbContext.Books.FirstOrDefaultAsync(x => x.Title == bookTitle);
-            //if (book == null) return null;
-            //var basket = new Basket
-            //{
-            //    Books = new List<Book> { book }
-            //};
-            //await _appDbContext.Baskets.AddAsync(basket);
-            throw new NotImplementedException();
-
+            var book = await _appDbContext.Books.FirstOrDefaultAsync(x => x.Title == bookTitle);
+            if (book != null)
+            {
+                basket.Books.Add(book);
+                await _appDbContext.Baskets.AddAsync(basket);
+                return true;
+            }
+            return false;
         }
 
         public Task<decimal> Checkout()

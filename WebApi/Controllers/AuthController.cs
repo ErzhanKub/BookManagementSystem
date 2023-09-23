@@ -27,7 +27,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("Register")]
-        [Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(CreateUserCommand command)
         {
             var response = await _mediator.Send(command);

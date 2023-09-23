@@ -29,6 +29,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("GetByName")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetByName(GetUserByNameCommand command)
         {
             var user = await _mediator.Send(command);
@@ -38,6 +39,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("Update")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(UpdateUserCommand command)
         {
             var user = await _mediator.Send(command);
@@ -47,6 +49,7 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("DeleteByName")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(DeleteUserByNameCommand command)
         {
             var response = await _mediator.Send(command);
@@ -56,6 +59,7 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("DeleteById")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(DeleteUserByIdCommand command)
         {
             var response = await _mediator.Send(command);

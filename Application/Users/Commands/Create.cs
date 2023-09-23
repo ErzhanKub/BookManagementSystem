@@ -11,9 +11,7 @@ namespace Application.Users.Commands
     {
         public Guid Id { get; init; }
         public required string Username { get; init; }
-        public required string PasswordHash { get; init; }
         public required Role Role { get; init; }
-        public Basket? Basket { get; init; }
     }
     public record CreateUserCommand : IRequest<CreateUserResponse>
     {
@@ -40,6 +38,7 @@ namespace Application.Users.Commands
                 Username = request.Username,
                 PasswordHash = request.Password,
                 Role = request.Role,
+                Basket = new(),
             };
 
             await _userRepository.CreateAsync(user);
@@ -49,9 +48,7 @@ namespace Application.Users.Commands
             {
                 Id = user.Id,
                 Username = user.Username,
-                PasswordHash = user.PasswordHash,
                 Role = user.Role,
-                Basket = user.Basket,
             };
             return response;
         }

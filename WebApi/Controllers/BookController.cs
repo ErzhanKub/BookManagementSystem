@@ -21,7 +21,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("GetAll")]
-        [Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAll()
         {
             var request = new GetAlBooklRequest();
@@ -30,6 +30,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("GetByTitle")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetByTitle(GetBookByTitleRequest request)
         {
             var result = await _mediator.Send(request);
@@ -39,6 +40,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("Create")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CreateBookCommand command)
         {
             var response = await _mediator.Send(command);
@@ -46,6 +48,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("Update")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(UpdateBookCommand command)
         {
             var response = await _mediator.Send(command);
@@ -54,6 +57,7 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("DeleteByTitle")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(DeleteBookByTitleCommand command)
         {
             var result = await _mediator.Send(command);
@@ -63,6 +67,7 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("DeleteById")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(DeleteBookByIdCommand command)
         {
             var result = await _mediator.Send(command);

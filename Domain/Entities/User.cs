@@ -8,6 +8,6 @@ namespace Domain.Entities
         public required string Username { get; set; }
         public required string PasswordHash { get; set; }
         public required Role Role { get; set; }
-        public Basket? Basket { get; set; }
+        public required Basket Basket { get; set; }
     }
 }
