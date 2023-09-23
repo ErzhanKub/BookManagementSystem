@@ -28,11 +28,12 @@ namespace Application.Users.Commands
         public async Task<string> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
             var user = await _userRepository.CheckUserCredentials(request.Username, request.Password);
-            if (user == true)
+            if (user != null)
             {
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, request.Username),
+                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.Role, user.Role.ToString())
                 };
                 var tokenString = GetTokenString(claims, DateTime.UtcNow.AddMinutes(30));
                 return tokenString;

@@ -1,4 +1,6 @@
-﻿namespace Domain.Shared
+﻿using Domain.Entities;
+
+namespace Domain.Shared
 {
     public interface IRepository<TEntity>
     {

@@ -16,15 +16,15 @@ namespace Infrastucture.Repositories
             _appDbContext = appDbContext;
         }
 
-        public async Task<bool> CheckUserCredentials(string username, string password)
+        public async Task<User?> CheckUserCredentials(string username, string password)
         {
             var userExists = await _appDbContext.Users.AnyAsync(u => u.Username == username).ConfigureAwait(false);
             if (!userExists)
-                return false;
+                return null;
             var user = await _appDbContext.Users.FirstAsync(u => u.Username == username).ConfigureAwait(false);
             if (await HashPasswordAsync(password).ConfigureAwait(false) != user.PasswordHash)
-                return false;
-            return true;
+                return null;
+            return user;
         }
 
         public async Task CreateAsync(User user)
