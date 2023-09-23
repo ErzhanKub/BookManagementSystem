@@ -19,15 +19,17 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login(string username, string password)
+        public async Task<IActionResult> Login(LoginCommand command)
         {
-            return Ok();
+            var token = await _mediator.Send(command);
+            return Ok(token);
         }
 
         [HttpPost("Register")]
         public async Task<IActionResult> Register(CreateUserCommand command)
         {
-            return Ok();
+            var response = await _mediator.Send(command);
+            return Ok(response);
         }
     }
 }

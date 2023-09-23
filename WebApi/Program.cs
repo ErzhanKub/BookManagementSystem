@@ -39,12 +39,12 @@ builder.Services.AddAuthentication(opts =>
     };
 });
 
-builder.Services.AddAuthorization(opts =>
-{
-    opts.FallbackPolicy = new AuthorizationPolicyBuilder()
-        .RequireAuthenticatedUser()
-        .Build();
-});
+//builder.Services.AddAuthorization(opts =>
+//{
+//    opts.FallbackPolicy = new AuthorizationPolicyBuilder()
+//        .RequireAuthenticatedUser()
+//        .Build();
+//});
 
 var app = builder.Build();
 
@@ -54,8 +54,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseMiddleware<ExceptionHandlingMiddlwere>();
+
 app.UseHttpsRedirection();
+
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();

@@ -13,7 +13,7 @@ namespace Infrastucture.Repositories
         {
             _appDbContext = appDbContext;
         }
-
+        
         public async Task CreateAsync(User entity)
         {
             await _appDbContext.Users.AddAsync(entity);

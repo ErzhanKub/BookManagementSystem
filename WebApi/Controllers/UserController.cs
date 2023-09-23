@@ -34,13 +34,6 @@ namespace WebApi.Controllers
             return Ok(user);
         }
 
-        [HttpPost("Create")]
-        public async Task<IActionResult> Create(CreateUserCommand command)
-        {
-            var response = await _mediator.Send(command);
-            return Ok(response);
-        }
-
         [HttpPost("Update")]
         public async Task<IActionResult> Update(UpdateUserCommand command)
         {
