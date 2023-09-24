@@ -19,6 +19,7 @@ namespace WebApi.Controllers
             _mediator = mediator;
             _logger = logger;
         }
+
         [AllowAnonymous]
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
@@ -28,8 +29,8 @@ namespace WebApi.Controllers
             return Ok(response);
         }
 
-        [HttpPost("GetByName")]
         [Authorize(Roles = "Admin")]
+        [HttpPost("GetByName")]
         public async Task<IActionResult> GetByName(GetUserByNameCommand command)
         {
             var user = await _mediator.Send(command);
@@ -38,8 +39,16 @@ namespace WebApi.Controllers
             return BadRequest("User not found");
         }
 
-        [HttpPost("Update")]
         [Authorize(Roles = "Admin")]
+        [HttpPost("GetSomeUsersByNames")]
+        public async Task<IActionResult> GetSome(GetSomeUsersCommand command)
+        {
+            var users = await _mediator.Send(command);
+            return Ok(users);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("Update")]
         public async Task<IActionResult> Update(UpdateUserCommand command)
         {
             var user = await _mediator.Send(command);
@@ -48,8 +57,8 @@ namespace WebApi.Controllers
             return BadRequest("User not found");
         }
 
-        [HttpDelete("DeleteByName")]
         [Authorize(Roles = "Admin")]
+        [HttpDelete("DeleteByName")]
         public async Task<IActionResult> Delete(DeleteUserByNameCommand command)
         {
             var response = await _mediator.Send(command);
@@ -58,8 +67,8 @@ namespace WebApi.Controllers
             return BadRequest("User not found");
         }
 
-        [HttpDelete("DeleteById")]
         [Authorize(Roles = "Admin")]
+        [HttpDelete("DeleteById")]
         public async Task<IActionResult> Delete(DeleteUserByIdCommand command)
         {
             var response = await _mediator.Send(command);

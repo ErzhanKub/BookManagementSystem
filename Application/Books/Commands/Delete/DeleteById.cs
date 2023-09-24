@@ -6,7 +6,7 @@ namespace Application.Books.Commands.Delete
 {
     public record DeleteBookByIdCommand : IRequest<bool>
     {
-        public Guid Id { get; init; }
+        public required Guid[] Id { get; init; }
     }
 
     internal class DeleteBookByIdHandler : IRequestHandler<DeleteBookByIdCommand, bool>

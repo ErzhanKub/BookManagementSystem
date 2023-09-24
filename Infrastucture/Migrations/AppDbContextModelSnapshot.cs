@@ -36,7 +36,7 @@ namespace Infrastucture.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Baskets");
+                    b.ToTable("Baskets", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Book", b =>
@@ -65,7 +65,7 @@ namespace Infrastucture.Migrations
                     b.HasIndex("Title")
                         .IsUnique();
 
-                    b.ToTable("Books");
+                    b.ToTable("Books", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
@@ -90,7 +90,7 @@ namespace Infrastucture.Migrations
                     b.HasIndex("Username")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Basket", b =>

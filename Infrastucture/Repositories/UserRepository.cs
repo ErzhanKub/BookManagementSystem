@@ -58,7 +58,7 @@ namespace Infrastucture.Repositories
             return await _appDbContext.Users.AsNoTracking().ToListAsync().ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<User>> GetUsersByNames(params string[] names)
+        public async Task<IEnumerable<User>> GetSomeUsersByNames(params string[] names)
         {
             var users = await _appDbContext.Users.Where(u => names.Contains(u.Username)).ToListAsync().ConfigureAwait(false);
             return users;

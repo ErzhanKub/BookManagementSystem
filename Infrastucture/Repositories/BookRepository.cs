@@ -53,6 +53,12 @@ namespace Infrastucture.Repositories
             return book ?? default;
         }
 
+        public async Task<IEnumerable<Book>> GetSomeByTitles(params string[] titles)
+        {
+            var books = await _appDbContext.Books.Where(b => titles.Contains(b.Title)).ToListAsync().ConfigureAwait(false);
+            return books;
+        }
+
 
         public void Update(Book entity)
         {

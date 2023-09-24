@@ -40,6 +40,14 @@ namespace WebApi.Controllers
             return BadRequest("Book Not Found");
         }
 
+        [AllowAnonymous]
+        [HttpPost("GetSomeByTitles")]
+        public async Task<IActionResult> GetSome(GetSomeBookByTitlesRequest request)
+        {
+            var books = await _mediator.Send(request);
+            return Ok(books);
+        }
+
         [Authorize(Roles = "Admin")]
         [HttpPost("Create")]
         public async Task<IActionResult> Create(CreateBookCommand command)
@@ -57,8 +65,8 @@ namespace WebApi.Controllers
             return BadRequest();
         }
 
-        [HttpDelete("DeleteByTitle")]
         [Authorize(Roles = "Admin")]
+        [HttpDelete("DeleteByTitle")]
         public async Task<IActionResult> Delete(DeleteBookByTitleCommand command)
         {
             var result = await _mediator.Send(command);
@@ -67,8 +75,8 @@ namespace WebApi.Controllers
             return BadRequest("Book not found.");
         }
 
-        [HttpDelete("DeleteById")]
         [Authorize(Roles = "Admin")]
+        [HttpDelete("DeleteById")]
         public async Task<IActionResult> Delete(DeleteBookByIdCommand command)
         {
             var result = await _mediator.Send(command);

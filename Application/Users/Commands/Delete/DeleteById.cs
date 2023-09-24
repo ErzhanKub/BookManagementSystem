@@ -6,7 +6,7 @@ namespace Application.Users.Commands.Delete
 {
     public record DeleteUserByIdCommand : IRequest<bool>
     {
-        public Guid Id { get; init; }
+        public required Guid[] Id { get; init; }
     }
 
     internal class DeleteUserByIdHandler : IRequestHandler<DeleteUserByIdCommand, bool>

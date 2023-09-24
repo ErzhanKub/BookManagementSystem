@@ -6,7 +6,7 @@ namespace Application.Baskets.Requests
 {
     public record GetBooksFromBasketResponse
     {
-        public List<Book> Books { get; init; } = new List<Book>();
+        public List<Book> Books { get; init; } 
     }
 
     public record GetBooksFromBasketCommand : IRequest<GetBooksFromBasketResponse?>
@@ -25,7 +25,7 @@ namespace Application.Baskets.Requests
 
         public async Task<GetBooksFromBasketResponse?> Handle(GetBooksFromBasketCommand request, CancellationToken cancellationToken)
         {
-            var users = await _userRepository.GetUsersByNames(request.Username).ConfigureAwait(false);
+            var users = await _userRepository.GetSomeUsersByNames(request.Username).ConfigureAwait(false);
             if (users is not null)
             {
                 List<Book> books = new();
