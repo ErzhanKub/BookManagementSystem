@@ -30,6 +30,8 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Register(CreateUserCommand command)
         {
+            if (((int)command.Role) < 1 || ((int)command.Role) > 2)
+                return BadRequest("Not the correct role");
             var response = await _mediator.Send(command);
             return Ok(response);
         }

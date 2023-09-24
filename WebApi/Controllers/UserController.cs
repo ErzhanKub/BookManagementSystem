@@ -20,7 +20,7 @@ namespace WebApi.Controllers
             _logger = logger;
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
@@ -34,9 +34,9 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetByName(GetUserByNameCommand command)
         {
             var user = await _mediator.Send(command);
-            if (user != null)
+            if (user is not null)
                 return Ok(user);
-            return BadRequest("User not found");
+            return NotFound();
         }
 
         [Authorize(Roles = "Admin")]
@@ -52,19 +52,19 @@ namespace WebApi.Controllers
         public async Task<IActionResult> Update(UpdateUserCommand command)
         {
             var user = await _mediator.Send(command);
-            if (user != null)
+            if (user is not null)
                 return Ok(user);
-            return BadRequest("User not found");
+            return NotFound();
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpDelete("DeleteByName")]
+        [HttpDelete("DeleteByNames")]
         public async Task<IActionResult> Delete(DeleteUserByNameCommand command)
         {
             var response = await _mediator.Send(command);
             if (response == true)
                 return Ok(response);
-            return BadRequest("User not found");
+            return NotFound();
         }
 
         [Authorize(Roles = "Admin")]
@@ -74,7 +74,7 @@ namespace WebApi.Controllers
             var response = await _mediator.Send(command);
             if (response == true)
                 return Ok(response);
-            return BadRequest("User not found");
+            return NotFound();
         }
     }
 }

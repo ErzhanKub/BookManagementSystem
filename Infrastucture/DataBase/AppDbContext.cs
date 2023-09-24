@@ -19,6 +19,7 @@ namespace Infrastucture.DataBase
                 .HasIndex(u => u.Username)
                 .IsUnique();
             modelBuilder.Entity<User>().Navigation(u => u.Basket).AutoInclude();
+            modelBuilder.Entity<Basket>().Navigation(b => b.Books).AutoInclude();
         }
     }
 }

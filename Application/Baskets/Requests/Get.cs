@@ -6,7 +6,7 @@ namespace Application.Baskets.Requests
 {
     public record GetBooksFromBasketResponse
     {
-        public List<Book> Books { get; init; } 
+        public List<Book> Books { get; init; } = new();
     }
 
     public record GetBooksFromBasketCommand : IRequest<GetBooksFromBasketResponse?>
@@ -28,15 +28,11 @@ namespace Application.Baskets.Requests
             var users = await _userRepository.GetSomeUsersByNames(request.Username).ConfigureAwait(false);
             if (users is not null)
             {
-                List<Book> books = new();
+                var response = new GetBooksFromBasketResponse();
                 foreach (var user in users)
                 {
-                    books = user.Basket.Books;
+                    response.Books.AddRange(user.Basket.Books.ToList());
                 }
-                if (books is null)
-                    return null;
-                var response = new GetBooksFromBasketResponse();
-                response.Books.AddRange(books);
                 return response;
             }
             return default;

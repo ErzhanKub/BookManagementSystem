@@ -4,6 +4,7 @@ using Application.Books.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace WebApi.Controllers
 {
@@ -37,7 +38,7 @@ namespace WebApi.Controllers
             var book = await _mediator.Send(request);
             if (book is not null)
                 return Ok(book);
-            return BadRequest("Book Not Found");
+            return NotFound();
         }
 
         [AllowAnonymous]
@@ -52,6 +53,10 @@ namespace WebApi.Controllers
         [HttpPost("Create")]
         public async Task<IActionResult> Create(CreateBookCommand command)
         {
+            if (command.Title.IsNullOrEmpty())
+                return BadRequest("Title cannot be empty");
+            if (command.Price < 0)
+                return BadRequest($"Price cannot be negative {command.Price}");
             var response = await _mediator.Send(command);
             return Ok(response);
         }
@@ -61,7 +66,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> Update(UpdateBookCommand command)
         {
             var response = await _mediator.Send(command);
-            if (response != null) return Ok(response);
+            if (response is not null) return Ok(response);
             return BadRequest();
         }
 
@@ -72,7 +77,7 @@ namespace WebApi.Controllers
             var result = await _mediator.Send(command);
             if (result == true)
                 return Ok("Book deleted.");
-            return BadRequest("Book not found.");
+            return NotFound();
         }
 
         [Authorize(Roles = "Admin")]
@@ -82,7 +87,7 @@ namespace WebApi.Controllers
             var result = await _mediator.Send(command);
             if (result == true)
                 return Ok("Book deleted.");
-            return BadRequest("Book not found.");
+            return NotFound();
         }
     }
 }
