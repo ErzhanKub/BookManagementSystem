@@ -5,7 +5,7 @@
 namespace Infrastucture.Migrations
 {
     /// <inheritdoc />
-    public partial class testnewc : Migration
+    public partial class Testnewc : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
