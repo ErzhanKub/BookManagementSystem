@@ -9,7 +9,6 @@ namespace Application.Users.Requests
     {
         public Guid Id { get; set; }
         public required string Username { get; set; }
-        public required string PasswordHash { get; set; }
         public required Role Role { get; init; }
         public Basket? Basket { get; set; }
     }
@@ -25,14 +24,13 @@ namespace Application.Users.Requests
 
         public async Task<GetUserResponse?> Handle(GetUserByNameCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByName(request.Username);
-            if (user != null)
+            var user = await _userRepository.GetUserByName(request.Username);
+            if (user is not null)
             {
                 var response = new GetUserResponse
                 {
                     Id = user.Id,
                     Username = user.Username,
-                    PasswordHash = user.PasswordHash,
                     Role = user.Role,
                     Basket = user.Basket,
                 };

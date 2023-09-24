@@ -3,6 +3,7 @@ using Domain.Repositories;
 using Infrastucture.DataBase;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace Infrastucture.Repositories
 {
     public class BookRepository : IBookRepository
@@ -19,23 +20,23 @@ namespace Infrastucture.Repositories
             await _appDbContext.Books.AddAsync(entity).ConfigureAwait(false);
         }
 
-        public async Task<bool> DeleteAsync(string name)
+        public async Task<bool> DeleteAsync(params string[] names)
         {
-            var book = await _appDbContext.Books.FirstOrDefaultAsync(b => b.Title == name).ConfigureAwait(false);
-            if (book != null)
+            var books = await _appDbContext.Books.Where(b => names.Contains(b.Title)).ToListAsync().ConfigureAwait(false);
+            if (books.Any())
             {
-                _appDbContext.Books.Remove(book);
+                _appDbContext.Books.RemoveRange(books);
                 return true;
             }
             return false;
         }
 
-        public async Task<bool> DeleteAsync(Guid Id)
+        public async Task<bool> DeleteAsync(params Guid[] Id)
         {
-            var book = await _appDbContext.Books.FirstOrDefaultAsync(b => b.Id == Id).ConfigureAwait(false);
-            if (book != null)
+            var books = await _appDbContext.Books.Where(b => Id.Contains(b.Id)).ToListAsync().ConfigureAwait(false);
+            if (books.Any())
             {
-                _appDbContext.Books.Remove(book);
+                _appDbContext.Books.RemoveRange(books);
                 return true;
             }
             return false;
@@ -46,11 +47,12 @@ namespace Infrastucture.Repositories
             return _appDbContext.Books.AsNoTracking().ToListAsync();
         }
 
-        public Task<Book?> GetByTitle(string title)
+        public async Task<Book?> GetByTitle(string title)
         {
-            var book = _appDbContext.Books.FirstOrDefaultAsync(b => b.Title == title);
-            return book;
+            var book = await _appDbContext.Books.FirstOrDefaultAsync(b => b.Title == title);
+            return book ?? default;
         }
+
 
         public void Update(Book entity)
         {

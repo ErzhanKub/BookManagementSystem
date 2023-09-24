@@ -1,12 +1,6 @@
 ﻿using Application.Shared;
 using Domain.Repositories;
 using MediatR;
-using Microsoft.VisualBasic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Baskets.Commands
 {
@@ -32,15 +26,17 @@ namespace Application.Baskets.Commands
 
         public async Task<bool> Handle(AddBookToBasketCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByName(request.Username);
-            if (user != null)
+            var user = await _userRepository.GetUserByName(request.Username).ConfigureAwait(false);
+            var book = await _bookRepository.GetByTitle(request.Title).ConfigureAwait(false);
+
+            if (user is not null && book is not null)
             {
-                var book = await _bookRepository.GetByTitle(request.Title);
                 user.Basket.Books.Add(book);
-                await _unitOfWork.CommitAsync();
+                await _unitOfWork.CommitAsync().ConfigureAwait(false);
                 return true;
             }
             return false;
         }
     }
+
 }

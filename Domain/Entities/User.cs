@@ -5,9 +5,9 @@ namespace Domain.Entities
     public class User
     {
         public Guid Id { get; set; }
-        public required string Username { get; set; }
-        public required string PasswordHash { get; set; }
-        public required Role Role { get; set; }
-        public required Basket Basket { get; set; }
+        public string Username { get; set; } = string.Empty;
+        public string PasswordHash { get; set; } = string.Empty;
+        public Role Role { get; set; }
+        public Basket Basket { get; set; } = new();
     }
 }

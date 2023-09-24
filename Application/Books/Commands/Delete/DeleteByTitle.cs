@@ -22,12 +22,10 @@ namespace Application.Books.Commands.Delete
 
         public async Task<bool> Handle(DeleteBookByTitleCommand request, CancellationToken cancellationToken)
         {
-            var result = await _bookRepository.DeleteAsync(request.Title);
-            if (result == true)
-                await _unitOfWork.CommitAsync();
+            var result = await _bookRepository.DeleteAsync(request.Title).ConfigureAwait(false);
+            if (result)
+                await _unitOfWork.CommitAsync().ConfigureAwait(false);
             return result;
         }
     }
-
-
 }

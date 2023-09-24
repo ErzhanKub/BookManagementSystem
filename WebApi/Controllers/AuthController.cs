@@ -22,7 +22,7 @@ namespace WebApi.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginCommand command)
         {
-            var token = await _mediator.Send(command);
+            var token = await _mediator.Send(command) ?? string.Empty;
             return Ok(token);
         }
 

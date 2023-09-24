@@ -23,7 +23,7 @@ namespace Application.Books.Requests
         public async Task<GetBooksResponse?> Handle(GetBookByTitleRequest request, CancellationToken cancellationToken)
         {
             var book = await _bookRepository.GetByTitle(request.Title);
-            if (book != null)
+            if (book is not null)
             {
                 var response = new GetBooksResponse
                 {

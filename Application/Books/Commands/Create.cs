@@ -12,6 +12,7 @@ namespace Application.Books.Commands
         public string? Description { get; init; }
         public decimal Price { get; init; }
     }
+
     public record CreateBookCommand : IRequest<CreateBookResponse>
     {
         public required string Title { get; init; }
@@ -39,8 +40,8 @@ namespace Application.Books.Commands
                 Price = request.Price,
             };
 
-            await _bookRepository.CreateAsync(book);
-            await _unitOfWork.CommitAsync();
+            await _bookRepository.CreateAsync(book).ConfigureAwait(false);
+            await _unitOfWork.CommitAsync().ConfigureAwait(false);
 
             var response = new CreateBookResponse
             {
@@ -49,8 +50,9 @@ namespace Application.Books.Commands
                 Description = book.Description,
                 Price = book.Price,
             };
-            
+
             return response;
         }
     }
+
 }

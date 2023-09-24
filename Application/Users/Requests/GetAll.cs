@@ -7,11 +7,9 @@ namespace Application.Users.Requests
 {
     public record GetUsersResponse
     {
-        public Guid Id { get; set; }
-        public required string Username { get; set; }
-        public required string PasswordHash { get; set; }
+        public Guid Id { get; init; }
+        public required string Username { get; init; }
         public required Role Role { get; init; }
-        public Basket? Basket { get; set; }
     }
     public record GetAllUsersRequest : IRequest<IEnumerable<GetUsersResponse>> { }
 
@@ -34,9 +32,7 @@ namespace Application.Users.Requests
                 {
                     Id = user.Id,
                     Username = user.Username,
-                    PasswordHash = user.PasswordHash,
                     Role = user.Role,
-                    Basket = user.Basket,
                 };
                 response.Add(result);
             }

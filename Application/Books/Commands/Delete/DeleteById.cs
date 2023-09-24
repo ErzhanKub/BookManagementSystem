@@ -6,8 +6,9 @@ namespace Application.Books.Commands.Delete
 {
     public record DeleteBookByIdCommand : IRequest<bool>
     {
-        public required Guid Id { get; init; }
+        public Guid Id { get; init; }
     }
+
     internal class DeleteBookByIdHandler : IRequestHandler<DeleteBookByIdCommand, bool>
     {
         private readonly IBookRepository _bookRepository;
@@ -21,10 +22,11 @@ namespace Application.Books.Commands.Delete
 
         public async Task<bool> Handle(DeleteBookByIdCommand request, CancellationToken cancellationToken)
         {
-            var result = await _bookRepository.DeleteAsync(request.Id);
-            if (result == true)
-                await _unitOfWork.CommitAsync();
+            var result = await _bookRepository.DeleteAsync(request.Id).ConfigureAwait(false);
+            if (result)
+                await _unitOfWork.CommitAsync().ConfigureAwait(false);
             return result;
         }
     }
+
 }

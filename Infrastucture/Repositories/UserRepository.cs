@@ -18,11 +18,8 @@ namespace Infrastucture.Repositories
 
         public async Task<User?> CheckUserCredentials(string username, string password)
         {
-            var userExists = await _appDbContext.Users.AnyAsync(u => u.Username == username).ConfigureAwait(false);
-            if (!userExists)
-                return null;
-            var user = await _appDbContext.Users.FirstAsync(u => u.Username == username).ConfigureAwait(false);
-            if (await HashPasswordAsync(password).ConfigureAwait(false) != user.PasswordHash)
+            var user = await _appDbContext.Users.SingleOrDefaultAsync(u => u.Username == username).ConfigureAwait(false);
+            if (user is null || await HashPasswordAsync(password).ConfigureAwait(false) != user.PasswordHash)
                 return null;
             return user;
         }
@@ -34,23 +31,23 @@ namespace Infrastucture.Repositories
             await _appDbContext.Users.AddAsync(user).ConfigureAwait(false);
         }
 
-        public async Task<bool> DeleteAsync(string name)
+        public async Task<bool> DeleteAsync(params string[] names)
         {
-            var user = await _appDbContext.Users.FirstOrDefaultAsync(u => u.Username == name).ConfigureAwait(false);
-            if (user != null)
+            var users = await _appDbContext.Users.Where(u => names.Contains(u.Username)).ToListAsync().ConfigureAwait(false);
+            if (users.Any())
             {
-                _appDbContext.Users.Remove(user);
+                _appDbContext.Users.RemoveRange(users);
                 return true;
             }
             return false;
         }
 
-        public async Task<bool> DeleteAsync(Guid Id)
+        public async Task<bool> DeleteAsync(params Guid[] Id)
         {
-            var user = await _appDbContext.Users.FirstOrDefaultAsync(u => u.Id == Id).ConfigureAwait(false);
-            if (user != null)
+            var users = await _appDbContext.Users.Where(u => Id.Contains(u.Id)).ToListAsync().ConfigureAwait(false);
+            if (users.Any())
             {
-                _appDbContext.Users.Remove(user);
+                _appDbContext.Users.RemoveRange(users);
                 return true;
             }
             return false;
@@ -61,10 +58,16 @@ namespace Infrastucture.Repositories
             return await _appDbContext.Users.AsNoTracking().ToListAsync().ConfigureAwait(false);
         }
 
-        public async Task<User?> GetByName(string name)
+        public async Task<IEnumerable<User>> GetUsersByNames(params string[] names)
         {
-            var user = await _appDbContext.Users.FirstOrDefaultAsync(u => u.Username == name).ConfigureAwait(false);
-            return user;
+            var users = await _appDbContext.Users.Where(u => names.Contains(u.Username)).ToListAsync().ConfigureAwait(false);
+            return users;
+        }
+
+        public async Task<User?> GetUserByName(string username)
+        {
+            var user = await _appDbContext.Users.SingleOrDefaultAsync(u => u.Username == username).ConfigureAwait(false);
+            return user ?? null;
         }
 
         public async Task<string> HashPasswordAsync(string password)

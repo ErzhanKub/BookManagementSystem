@@ -7,7 +7,7 @@ namespace Domain.Shared
         Task<List<TEntity>> GetAllAsync();
         Task CreateAsync(TEntity entity);
         void Update(TEntity entity);
-        Task<bool> DeleteAsync(string name);
-        Task<bool> DeleteAsync(Guid Id);
+        Task<bool> DeleteAsync(params string[] names);
+        Task<bool> DeleteAsync(params Guid[] Id);
     }
 }

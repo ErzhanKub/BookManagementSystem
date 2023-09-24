@@ -4,6 +4,7 @@ using Infrastucture.DataBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastucture.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230924054613_NewEnt")]
+    partial class NewEnt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -95,11 +98,13 @@ namespace Infrastucture.Migrations
 
             modelBuilder.Entity("Domain.Entities.Basket", b =>
                 {
-                    b.HasOne("Domain.Entities.User", null)
+                    b.HasOne("Domain.Entities.User", "User")
                         .WithOne("Basket")
                         .HasForeignKey("Domain.Entities.Basket", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Entities.Book", b =>

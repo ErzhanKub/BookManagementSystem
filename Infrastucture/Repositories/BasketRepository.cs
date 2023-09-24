@@ -16,15 +16,18 @@ namespace Infrastucture.Repositories
 
         public async Task<bool> AddBookToBasketAsync(string bookTitle, Basket basket)
         {
-            var book = await _appDbContext.Books.FirstOrDefaultAsync(x => x.Title == bookTitle);
-            if (book != null)
+            var hasBook = await _appDbContext.Books.AnyAsync(x => x.Title == bookTitle);
+            if (hasBook)
             {
+                basket.Books ??= new List<Book>();
+                var book = await _appDbContext.Books.FirstAsync(x => x.Title == bookTitle);
                 basket.Books.Add(book);
                 await _appDbContext.Baskets.AddAsync(basket);
                 return true;
             }
             return false;
         }
+
 
         public Task<decimal> Checkout()
         {

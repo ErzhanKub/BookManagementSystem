@@ -20,35 +20,36 @@ namespace WebApi.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet("GetAll")]
         [AllowAnonymous]
+        [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
-            var request = new GetAlBooklRequest();
+            var request = new GetAllBooksRequest();
             var books = await _mediator.Send(request);
+            if (books is null) return Ok("The list is empty");
             return Ok(books);
         }
 
-        [HttpPost("GetByTitle")]
         [AllowAnonymous]
+        [HttpPost("GetByTitle")]
         public async Task<IActionResult> GetByTitle(GetBookByTitleRequest request)
         {
-            var result = await _mediator.Send(request);
-            if (result != null)
-                return Ok(result);
+            var book = await _mediator.Send(request);
+            if (book is not null)
+                return Ok(book);
             return BadRequest("Book Not Found");
         }
 
-        [HttpPost("Create")]
         [Authorize(Roles = "Admin")]
+        [HttpPost("Create")]
         public async Task<IActionResult> Create(CreateBookCommand command)
         {
             var response = await _mediator.Send(command);
             return Ok(response);
         }
 
-        [HttpPost("Update")]
         [Authorize(Roles = "Admin")]
+        [HttpPost("Update")]
         public async Task<IActionResult> Update(UpdateBookCommand command)
         {
             var response = await _mediator.Send(command);

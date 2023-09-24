@@ -10,9 +10,7 @@ namespace Application.Users.Commands
     {
         public Guid Id { get; init; }
         public required string Username { get; init; }
-        public required string PasswordHash { get; init; }
         public required Role Role { get; init; }
-        public Basket? Basket { get; init; }
     }
     public record UpdateUserCommand : IRequest<UpdateUserResponse?>
     {
@@ -34,11 +32,11 @@ namespace Application.Users.Commands
 
         public async Task<UpdateUserResponse?> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByName(request.Username);
-            if (user != null)
+            var user = await _userRepository.GetUserByName(request.Username);
+            if (user is not null)
             {
-                user.Username = request.Username;
-                user.PasswordHash = request.Password;
+                user.Username ??= request.Username;
+                user.PasswordHash ??= request.Password;
                 user.Role = request.Role;
 
                 _userRepository.Update(user);
@@ -48,13 +46,12 @@ namespace Application.Users.Commands
                 {
                     Id = user.Id,
                     Username = user.Username,
-                    PasswordHash = user.PasswordHash,
                     Role = user.Role,
-                    Basket = user.Basket
                 };
                 return response;
             }
             return default;
         }
+
     }
 }

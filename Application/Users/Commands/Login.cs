@@ -28,7 +28,7 @@ namespace Application.Users.Commands
         public async Task<string> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
             var user = await _userRepository.CheckUserCredentials(request.Username, request.Password);
-            if (user != null)
+            if (user is not null)
             {
                 var claims = new List<Claim>
                 {

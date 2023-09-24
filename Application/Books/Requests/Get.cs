@@ -10,9 +10,10 @@ namespace Application.Books.Requests
         public string? Description { get; init; }
         public decimal Price { get; init; }
     }
-    public record GetAlBooklRequest : IRequest<IEnumerable<GetBooksResponse>> { }
-    
-    internal class GetAllBookHandler : IRequestHandler<GetAlBooklRequest, IEnumerable<GetBooksResponse>>
+
+    public record GetAllBooksRequest : IRequest<IEnumerable<GetBooksResponse>> { }
+
+    internal class GetAllBookHandler : IRequestHandler<GetAllBooksRequest, IEnumerable<GetBooksResponse>>
     {
         private readonly IBookRepository _bookRepository;
 
@@ -21,9 +22,9 @@ namespace Application.Books.Requests
             _bookRepository = bookRepository;
         }
 
-        public async Task<IEnumerable<GetBooksResponse>> Handle(GetAlBooklRequest request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<GetBooksResponse>> Handle(GetAllBooksRequest request, CancellationToken cancellationToken)
         {
-            var books = await _bookRepository.GetAllAsync();
+            var books = await _bookRepository.GetAllAsync().ConfigureAwait(false);
             var response = new List<GetBooksResponse>();
             foreach (var book in books)
             {
@@ -39,4 +40,5 @@ namespace Application.Books.Requests
             return response;
         }
     }
+
 }

@@ -11,6 +11,7 @@ namespace Application.Books.Commands
         public string? Description { get; init; }
         public decimal Price { get; init; }
     }
+
     public record UpdateBookCommand : IRequest<UpdateBookResponse?>
     {
         public required string Title { get; init; }
@@ -31,15 +32,15 @@ namespace Application.Books.Commands
 
         public async Task<UpdateBookResponse?> Handle(UpdateBookCommand request, CancellationToken cancellationToken)
         {
-            var book = await _bookRepository.GetByTitle(request.Title);
-            if (book != null)
+            var book = await _bookRepository.GetByTitle(request.Title).ConfigureAwait(false);
+            if (book is not null)
             {
                 book.Title = request.Title;
                 book.Description = request.Description;
                 book.Price = request.Price;
 
                 _bookRepository.Update(book);
-                await _unitOfWork.CommitAsync();
+                await _unitOfWork.CommitAsync().ConfigureAwait(false);
 
                 var response = new UpdateBookResponse
                 {
@@ -53,4 +54,5 @@ namespace Application.Books.Commands
             return default;
         }
     }
+
 }
