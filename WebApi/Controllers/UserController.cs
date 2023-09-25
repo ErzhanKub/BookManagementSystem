@@ -4,6 +4,7 @@ using Application.Users.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace WebApi.Controllers
 {
@@ -54,6 +55,18 @@ namespace WebApi.Controllers
             var user = await _mediator.Send(command);
             if (user is not null)
                 return Ok(user);
+            return NotFound();
+        }
+
+        [Authorize(Roles = "User")]
+        [Authorize(Roles = "Admin")]
+        [HttpPost("UpdateCorrentUser")]
+        public async Task<IActionResult> UpdateCorrentUser(UpdateUserCommand command)
+        {
+            var currentUsername = HttpContext.User.FindFirstValue(ClaimTypes.Name) ?? string.Empty;
+            command.Username = currentUsername;
+            var updateUser = await _mediator.Send(command);
+            if (updateUser is not null) return Ok(updateUser);
             return NotFound();
         }
 

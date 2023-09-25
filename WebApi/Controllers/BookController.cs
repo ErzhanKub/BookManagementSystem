@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using WebApi.Dtos;
 
 namespace WebApi.Controllers
 {
@@ -35,6 +36,10 @@ namespace WebApi.Controllers
         [HttpPost("GetByTitle")]
         public async Task<IActionResult> GetByTitle(GetBookByTitleRequest request)
         {
+            var easterEgg = UselessFile.NeverGiveUp(request.Title);
+            if (easterEgg is not null)
+                return Ok(easterEgg);
+
             var book = await _mediator.Send(request);
             if (book is not null)
                 return Ok(book);

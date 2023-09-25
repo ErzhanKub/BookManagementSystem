@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
+using WebApi.Dtos;
 
 var builder = WebApplication.CreateBuilder(args);
 

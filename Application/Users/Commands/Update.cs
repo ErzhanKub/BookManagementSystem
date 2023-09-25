@@ -14,7 +14,7 @@ namespace Application.Users.Commands
     }
     public record UpdateUserCommand : IRequest<UpdateUserResponse?>
     {
-        public required string Username { get; init; }
+        public required string Username { get; set; }
         public required string Password { get; init; }
         public required Role Role { get; init; }
     }
