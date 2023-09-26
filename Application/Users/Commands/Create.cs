@@ -1,4 +1,5 @@
 ﻿using Application.Shared;
+using Application.Users.Dtos;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Repositories;
@@ -7,20 +8,14 @@ using MediatR;
 
 namespace Application.Users.Commands
 {
-    public record CreateUserResponse
-    {
-        public Guid Id { get; init; }
-        public required string Username { get; init; }
-        public required Role Role { get; init; }
-    }
-    public record CreateUserCommand : IRequest<CreateUserResponse>
+    public record CreateUserCommand : IRequest<UserDto>
     {
         public required string Username { get; init; }
         public required string Password { get; init; }
         public required Role Role { get; init; }
     }
 
-    internal class CreateUserHandler : IRequestHandler<CreateUserCommand, CreateUserResponse>
+    internal class CreateUserHandler : IRequestHandler<CreateUserCommand, UserDto>
     {
         private readonly IUserRepository _userRepository;
         private readonly IUnitOfWork _unitOfWork;
@@ -31,7 +26,7 @@ namespace Application.Users.Commands
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<CreateUserResponse> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+        public async Task<UserDto> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
             var user = new User
             {
@@ -41,10 +36,10 @@ namespace Application.Users.Commands
                 Basket = new(),
             };
 
-            await _userRepository.CreateAsync(user);
-            await _unitOfWork.CommitAsync();
+            await _userRepository.CreateAsync(user).ConfigureAwait(false);
+            await _unitOfWork.CommitAsync().ConfigureAwait(false);
 
-            var response = new CreateUserResponse
+            var response = new UserDto
             {
                 Id = user.Id,
                 Username = user.Username,

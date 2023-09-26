@@ -6,11 +6,6 @@ using Infrastucture.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastucture
 {
@@ -27,7 +22,7 @@ namespace Infrastucture
 
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<IBookRepository,BookRepository>();
+            services.AddTransient<IBookRepository, BookRepository>();
 
             return services;
         }

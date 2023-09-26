@@ -4,25 +4,25 @@ using MediatR;
 
 namespace Application.Books.Commands.Delete
 {
-    public record DeleteBookByIdCommand : IRequest<bool>
+    public record DeleteBooksByIdCommand : IRequest<bool>
     {
         public required Guid[] Id { get; init; }
     }
 
-    internal class DeleteBookByIdHandler : IRequestHandler<DeleteBookByIdCommand, bool>
+    internal class DeleteBooksByIdHandler : IRequestHandler<DeleteBooksByIdCommand, bool>
     {
         private readonly IBookRepository _bookRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteBookByIdHandler(IBookRepository bookRepository, IUnitOfWork unitOfWork)
+        public DeleteBooksByIdHandler(IBookRepository bookRepository, IUnitOfWork unitOfWork)
         {
             _bookRepository = bookRepository;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<bool> Handle(DeleteBookByIdCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeleteBooksByIdCommand command, CancellationToken cancellationToken)
         {
-            var result = await _bookRepository.DeleteAsync(request.Id).ConfigureAwait(false);
+            var result = await _bookRepository.DeleteAsync(command.Id).ConfigureAwait(false);
             if (result)
                 await _unitOfWork.CommitAsync().ConfigureAwait(false);
             return result;

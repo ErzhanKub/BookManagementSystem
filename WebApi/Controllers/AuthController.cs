@@ -1,7 +1,6 @@
 ﻿using Application.Users.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using WebApi.Dtos;
@@ -20,19 +19,20 @@ namespace WebApi.Controllers
             _mediator = mediator;
             _logger = logger;
         }
+
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginCommand command)
+        public async Task<IActionResult> Login(LoginQuery query)
         {
-            if (command.Username.IsNullOrEmpty()) return BadRequest("Username is null");
-            if (command.Password.IsNullOrEmpty()) return BadRequest("Password is null");
+            if (query.Username.IsNullOrEmpty()) return BadRequest("Username is null");
+            if (query.Password.IsNullOrEmpty()) return BadRequest("Password is null");
 
-            var token = await _mediator.Send(command) ?? string.Empty;
+            var token = await _mediator.Send(query) ?? string.Empty;
             return Ok(token);
         }
 
-        [HttpPost("register")]
         [AllowAnonymous]
+        [HttpPost("register")]
         public async Task<IActionResult> Register(CreateUserCommand command)
         {
             var secret = UselessFile.Gentleman(command.Username);

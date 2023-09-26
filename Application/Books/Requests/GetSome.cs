@@ -1,42 +1,30 @@
-﻿using Application.Users.Requests;
+﻿using Application.Books.Dtos;
 using Domain.Repositories;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Books.Requests
 {
-    public record GetSomeBooksResponse
-    {
-        public Guid Id { get; init; }
-        public required string Title { get; init; }
-        public string? Description { get; init; }
-        public decimal Price { get; init; }
-    }
-    public record GetSomeBookByTitlesRequest : IRequest<IEnumerable<GetSomeBooksResponse>>
+    public record GetBooksByTitleQuery : IRequest<IEnumerable<BookDto>>
     {
         public required string[] Title { get; init; }
     }
 
-    internal class GetSomeBooksHandler : IRequestHandler<GetSomeBookByTitlesRequest, IEnumerable<GetSomeBooksResponse>>
+    internal class GetBooksHandler : IRequestHandler<GetBooksByTitleQuery, IEnumerable<BookDto>>
     {
         private readonly IBookRepository _bookRepository;
 
-        public GetSomeBooksHandler(IBookRepository bookRepository)
+        public GetBooksHandler(IBookRepository bookRepository)
         {
             _bookRepository = bookRepository;
         }
 
-        public async Task<IEnumerable<GetSomeBooksResponse>> Handle(GetSomeBookByTitlesRequest request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<BookDto>> Handle(GetBooksByTitleQuery request, CancellationToken cancellationToken)
         {
-            var books = await _bookRepository.GetSomeByTitles(request.Title);
-            var response = new List<GetSomeBooksResponse>();
+            var books = await _bookRepository.GetSomeByTitleAsync(request.Title).ConfigureAwait(false);
+            var response = new List<BookDto>();
             foreach (var book in books)
             {
-                var result = new GetSomeBooksResponse
+                var result = new BookDto
                 {
                     Id = book.Id,
                     Title = book.Title,

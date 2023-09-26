@@ -15,13 +15,13 @@ namespace Domain.Repositories
         /// </summary>
         /// <param name="title"></param>
         /// <returns></returns>
-        Task<Book?> GetByTitle(string title);
+        Task<Book?> GetByTitleAsync(string title);
         /// <summary>
         /// Returns a collection of books with the specified titles.
         /// Возвращает коллекцию книг по указанным названиям.
         /// </summary>
         /// <param name="titles"></param>
         /// <returns></returns>
-        Task<IEnumerable<Book>> GetSomeByTitles(params string[] titles);
+        Task<IEnumerable<Book>> GetSomeByTitleAsync(params string[] titles);
     }
 }

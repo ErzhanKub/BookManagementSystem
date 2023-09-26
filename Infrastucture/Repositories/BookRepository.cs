@@ -20,9 +20,9 @@ namespace Infrastucture.Repositories
             await _appDbContext.Books.AddAsync(entity).ConfigureAwait(false);
         }
 
-        public async Task<bool> DeleteAsync(params string[] names)
+        public async Task<bool> DeleteAsync(params string[] title)
         {
-            var books = await _appDbContext.Books.Where(b => names.Contains(b.Title)).ToListAsync().ConfigureAwait(false);
+            var books = await _appDbContext.Books.Where(b => title.Contains(b.Title)).ToListAsync().ConfigureAwait(false);
             if (books.Any())
             {
                 _appDbContext.Books.RemoveRange(books);
@@ -47,13 +47,13 @@ namespace Infrastucture.Repositories
             return _appDbContext.Books.AsNoTracking().ToListAsync();
         }
 
-        public async Task<Book?> GetByTitle(string title)
+        public async Task<Book?> GetByTitleAsync(string title)
         {
             var book = await _appDbContext.Books.FirstOrDefaultAsync(b => b.Title == title);
             return book ?? default;
         }
 
-        public async Task<IEnumerable<Book>> GetSomeByTitles(params string[] titles)
+        public async Task<IEnumerable<Book>> GetSomeByTitleAsync(params string[] titles)
         {
             var books = await _appDbContext.Books.Where(b => titles.Contains(b.Title)).ToListAsync().ConfigureAwait(false);
             return books;

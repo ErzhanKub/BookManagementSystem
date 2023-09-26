@@ -26,7 +26,7 @@ namespace WebApi.Controllers
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
-            var request = new GetAllBooksRequest();
+            var request = new GetAllBooksQuery();
             var books = await _mediator.Send(request);
             if (books is null) return Ok("The list is empty");
             return Ok(books);
@@ -34,7 +34,7 @@ namespace WebApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("GetByTitle")]
-        public async Task<IActionResult> GetByTitle(GetBookByTitleRequest request)
+        public async Task<IActionResult> GetByTitle(GetBookByTitleQuery request)
         {
             if (request.Title.IsNullOrEmpty()) return BadRequest("Title is null");
 
@@ -49,9 +49,11 @@ namespace WebApi.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("GetSomeByTitles")]
-        public async Task<IActionResult> GetSome(GetSomeBookByTitlesRequest request)
+        [HttpPost("GetSomeByTitle")]
+        public async Task<IActionResult> GetSome(GetBooksByTitleQuery request)
         {
+            if (request.Title.IsNullOrEmpty()) return BadRequest("Title is null");
+
             var books = await _mediator.Send(request);
             return Ok(books);
         }
@@ -60,7 +62,7 @@ namespace WebApi.Controllers
         [HttpPost("Create")]
         public async Task<IActionResult> Create(CreateBookCommand command)
         {
-
+            if (command.Title.IsNullOrEmpty()) return BadRequest("Title is null");
             if (command.Price < 0)
                 return BadRequest($"Price cannot be negative {command.Price}");
 
@@ -69,7 +71,7 @@ namespace WebApi.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPost("Update")]
+        [HttpPatch("Update")]
         public async Task<IActionResult> Update(UpdateBookCommand command)
         {
             if (command.Title.IsNullOrEmpty())
@@ -77,12 +79,12 @@ namespace WebApi.Controllers
 
             var response = await _mediator.Send(command);
             if (response is not null) return Ok(response);
-            return BadRequest();
+            return NotFound();
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpDelete("DeleteByTitles")]
-        public async Task<IActionResult> Delete(DeleteBookByTitleCommand command)
+        [HttpDelete("DeleteByTitle")]
+        public async Task<IActionResult> Delete(DeleteBooksByTitleCommand command)
         {
             var result = await _mediator.Send(command);
             if (result == true)
@@ -91,8 +93,8 @@ namespace WebApi.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpDelete("DeleteById's")]
-        public async Task<IActionResult> Delete(DeleteBookByIdCommand command)
+        [HttpDelete("DeleteById")]
+        public async Task<IActionResult> Delete(DeleteBooksByIdCommand command)
         {
             var result = await _mediator.Send(command);
             if (result == true)

@@ -12,8 +12,8 @@ namespace Application.Users.Requests
         public required Role Role { get; init; }
         public Basket? Basket { get; set; }
     }
-    public record GetUserByNameCommand : IRequest<GetUserResponse?> { public required string Username { get; init; } }
-    internal class GetUserByNameHandler : IRequestHandler<GetUserByNameCommand, GetUserResponse?>
+    public record GetUserByNameQuery : IRequest<GetUserResponse?> { public required string Username { get; init; } }
+    internal class GetUserByNameHandler : IRequestHandler<GetUserByNameQuery, GetUserResponse?>
     {
         private readonly IUserRepository _userRepository;
 
@@ -22,9 +22,9 @@ namespace Application.Users.Requests
             _userRepository = userRepository;
         }
 
-        public async Task<GetUserResponse?> Handle(GetUserByNameCommand request, CancellationToken cancellationToken)
+        public async Task<GetUserResponse?> Handle(GetUserByNameQuery request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetUserByName(request.Username);
+            var user = await _userRepository.GetUserByNameAsync(request.Username).ConfigureAwait(false);
             if (user is not null)
             {
                 var response = new GetUserResponse
@@ -38,6 +38,5 @@ namespace Application.Users.Requests
             }
             return default;
         }
-
     }
 }

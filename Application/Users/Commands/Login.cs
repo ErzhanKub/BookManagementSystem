@@ -8,13 +8,13 @@ using System.Text;
 
 namespace Application.Users.Commands
 {
-    public record LoginCommand : IRequest<string>
+    public record LoginQuery : IRequest<string>
     {
         public required string Username { get; init; }
         public required string Password { get; init; }
     }
 
-    internal class LoginHandler : IRequestHandler<LoginCommand, string>
+    internal class LoginHandler : IRequestHandler<LoginQuery, string>
     {
         private readonly IConfiguration _configuration;
         private readonly IUserRepository _userRepository;
@@ -25,9 +25,9 @@ namespace Application.Users.Commands
             _userRepository = userRepository;
         }
 
-        public async Task<string> Handle(LoginCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.CheckUserCredentials(request.Username, request.Password);
+            var user = await _userRepository.CheckUserCredentialsAsync(request.Username, request.Password);
             if (user is not null)
             {
                 var claims = new List<Claim>
@@ -38,7 +38,7 @@ namespace Application.Users.Commands
                 var tokenString = GetTokenString(claims, DateTime.UtcNow.AddMinutes(30));
                 return tokenString;
             }
-            return "Not Found";
+            return "User not found";
         }
 
         private string GetTokenString(List<Claim> claims, DateTime exp)

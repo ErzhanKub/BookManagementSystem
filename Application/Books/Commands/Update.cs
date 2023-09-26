@@ -1,25 +1,18 @@
-﻿using Application.Shared;
+﻿using Application.Books.Dtos;
+using Application.Shared;
 using Domain.Repositories;
 using MediatR;
 
 namespace Application.Books.Commands
 {
-    public record UpdateBookResponse
-    {
-        public Guid Id { get; init; }
-        public required string Title { get; init; }
-        public string? Description { get; init; }
-        public decimal Price { get; init; }
-    }
-
-    public record UpdateBookCommand : IRequest<UpdateBookResponse?>
+    public record UpdateBookCommand : IRequest<BookDto?>
     {
         public required string Title { get; init; }
         public string? Description { get; init; }
         public decimal Price { get; init; }
     }
 
-    internal class UpdateBookHandler : IRequestHandler<UpdateBookCommand, UpdateBookResponse?>
+    internal class UpdateBookHandler : IRequestHandler<UpdateBookCommand, BookDto?>
     {
         private readonly IBookRepository _bookRepository;
         private readonly IUnitOfWork _unitOfWork;
@@ -30,19 +23,19 @@ namespace Application.Books.Commands
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<UpdateBookResponse?> Handle(UpdateBookCommand request, CancellationToken cancellationToken)
+        public async Task<BookDto?> Handle(UpdateBookCommand command, CancellationToken cancellationToken)
         {
-            var book = await _bookRepository.GetByTitle(request.Title).ConfigureAwait(false);
+            var book = await _bookRepository.GetByTitleAsync(command.Title).ConfigureAwait(false);
             if (book is not null)
             {
-                book.Title = request.Title;
-                book.Description = request.Description;
-                book.Price = request.Price;
+                book.Title = command.Title;
+                book.Description = command.Description;
+                book.Price = command.Price;
 
                 _bookRepository.Update(book);
                 await _unitOfWork.CommitAsync().ConfigureAwait(false);
 
-                var response = new UpdateBookResponse
+                var response = new BookDto
                 {
                     Id = book.Id,
                     Title = book.Title,

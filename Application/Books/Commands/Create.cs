@@ -1,26 +1,19 @@
-﻿using Application.Shared;
+﻿using Application.Books.Dtos;
+using Application.Shared;
 using Domain.Entities;
 using Domain.Repositories;
 using MediatR;
 
 namespace Application.Books.Commands
 {
-    public record CreateBookResponse
-    {
-        public Guid Id { get; init; }
-        public required string Title { get; init; }
-        public string? Description { get; init; }
-        public decimal Price { get; init; }
-    }
-
-    public record CreateBookCommand : IRequest<CreateBookResponse>
+    public record CreateBookCommand : IRequest<BookDto>
     {
         public required string Title { get; init; }
         public string? Description { get; init; }
         public decimal Price { get; init; }
     }
 
-    internal class CreateBookHandler : IRequestHandler<CreateBookCommand, CreateBookResponse>
+    internal class CreateBookHandler : IRequestHandler<CreateBookCommand, BookDto>
     {
         private readonly IBookRepository _bookRepository;
         private readonly IUnitOfWork _unitOfWork;
@@ -31,19 +24,19 @@ namespace Application.Books.Commands
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<CreateBookResponse> Handle(CreateBookCommand request, CancellationToken cancellationToken)
+        public async Task<BookDto> Handle(CreateBookCommand command, CancellationToken cancellationToken)
         {
             var book = new Book
             {
-                Title = request.Title,
-                Description = request.Description,
-                Price = request.Price,
+                Title = command.Title,
+                Description = command.Description,
+                Price = command.Price,
             };
 
             await _bookRepository.CreateAsync(book).ConfigureAwait(false);
             await _unitOfWork.CommitAsync().ConfigureAwait(false);
 
-            var response = new CreateBookResponse
+            var response = new BookDto
             {
                 Id = book.Id,
                 Title = book.Title,

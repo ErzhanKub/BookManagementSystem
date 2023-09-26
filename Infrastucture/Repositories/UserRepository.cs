@@ -16,7 +16,7 @@ namespace Infrastucture.Repositories
             _appDbContext = appDbContext;
         }
 
-        public async Task<User?> CheckUserCredentials(string username, string password)
+        public async Task<User?> CheckUserCredentialsAsync(string username, string password)
         {
             var user = await _appDbContext.Users.SingleOrDefaultAsync(u => u.Username == username).ConfigureAwait(false);
             if (user is null || await HashPasswordAsync(password).ConfigureAwait(false) != user.PasswordHash)
@@ -58,13 +58,13 @@ namespace Infrastucture.Repositories
             return await _appDbContext.Users.AsNoTracking().ToListAsync().ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<User>> GetSomeUsersByNames(params string[] names)
+        public async Task<IEnumerable<User>> GetSomeUsersByNamesAsync(params string[] names)
         {
             var users = await _appDbContext.Users.Where(u => names.Contains(u.Username)).ToListAsync().ConfigureAwait(false);
             return users;
         }
 
-        public async Task<User?> GetUserByName(string username)
+        public async Task<User?> GetUserByNameAsync(string username)
         {
             var user = await _appDbContext.Users.SingleOrDefaultAsync(u => u.Username == username).ConfigureAwait(false);
             return user ?? null;

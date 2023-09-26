@@ -1,25 +1,19 @@
 ﻿using Application.Shared;
-using Domain.Entities;
+using Application.Users.Dtos;
 using Domain.Enums;
 using Domain.Repositories;
 using MediatR;
 
 namespace Application.Users.Commands
 {
-    public record UpdateUserResponse
+    public record UpdateUserCommand : IRequest<UserDto?>
     {
-        public Guid Id { get; init; }
         public required string Username { get; init; }
-        public required Role Role { get; init; }
-    }
-    public record UpdateUserCommand : IRequest<UpdateUserResponse?>
-    {
-        public required string Username { get; set; }
         public required string Password { get; init; }
         public required Role Role { get; init; }
     }
 
-    internal class UpdateUserHandler : IRequestHandler<UpdateUserCommand, UpdateUserResponse?>
+    internal class UpdateUserHandler : IRequestHandler<UpdateUserCommand, UserDto?>
     {
         private readonly IUserRepository _userRepository;
         private readonly IUnitOfWork _unitOfWork;
@@ -30,19 +24,19 @@ namespace Application.Users.Commands
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<UpdateUserResponse?> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+        public async Task<UserDto?> Handle(UpdateUserCommand command, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetUserByName(request.Username);
+            var user = await _userRepository.GetUserByNameAsync(command.Username).ConfigureAwait(false);
             if (user is not null)
             {
-                user.Username ??= request.Username;
-                user.PasswordHash ??= request.Password;
-                user.Role = request.Role;
+                user.Username ??= command.Username;
+                user.PasswordHash ??= command.Password;
+                user.Role = command.Role;
 
                 _userRepository.Update(user);
                 await _unitOfWork.CommitAsync();
 
-                var response = new UpdateUserResponse
+                var response = new UserDto
                 {
                     Id = user.Id,
                     Username = user.Username,
@@ -50,7 +44,7 @@ namespace Application.Users.Commands
                 };
                 return response;
             }
-            return default;
+            return default ;
         }
 
     }

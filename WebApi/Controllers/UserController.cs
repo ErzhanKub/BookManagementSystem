@@ -5,7 +5,6 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
 
 namespace WebApi.Controllers
 {
@@ -26,56 +25,58 @@ namespace WebApi.Controllers
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
-            var request = new GetAllUsersRequest();
+            var request = new GetAllUsersQuery();
             var response = await _mediator.Send(request);
             return Ok(response);
         }
 
         [Authorize(Roles = "Admin")]
         [HttpPost("GetByName")]
-        public async Task<IActionResult> GetByName(GetUserByNameCommand command)
+        public async Task<IActionResult> GetByName(GetUserByNameQuery request)
         {
-            if (command.Username.IsNullOrEmpty()) return BadRequest("Username is null");
-            var user = await _mediator.Send(command);
+            if (request.Username.IsNullOrEmpty()) return BadRequest("Is null");
+            var user = await _mediator.Send(request);
             if (user is not null)
                 return Ok(user);
             return NotFound();
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPost("GetSomeUsersByNames")]
-        public async Task<IActionResult> GetSome(GetSomeUsersCommand command)
+        [HttpPost("GetUsersByNames")]
+        public async Task<IActionResult> GetSome(GetSomeUsersQuery request)
         {
-            var users = await _mediator.Send(command);
+            if (request.Usernames.IsNullOrEmpty()) return BadRequest("Is null");
+
+            var users = await _mediator.Send(request);
             return Ok(users);
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPost("Update")]
+        [HttpPatch("Update")]
         public async Task<IActionResult> Update(UpdateUserCommand command)
         {
-            if (command.Username.IsNullOrEmpty()) return BadRequest("Username is null");
+            if (command.Username.IsNullOrEmpty()) return BadRequest("Is null");
             var user = await _mediator.Send(command);
             if (user is not null)
                 return Ok(user);
             return NotFound();
         }
 
-        [Authorize(Roles = "User")]
-        [Authorize(Roles = "Admin")]
-        [HttpPost("UpdateCorrentUser")]
-        public async Task<IActionResult> UpdateCorrentUser(UpdateUserCommand command) // Create new updateCorrent user command
-        {
-            var currentUsername = HttpContext.User.FindFirstValue(ClaimTypes.Name) ?? string.Empty;
-            command.Username = currentUsername;
-            var updateUser = await _mediator.Send(command);
-            if (updateUser is not null) return Ok(updateUser);
-            return NotFound();
-        }
+        //[Authorize(Roles = "User")]
+        //[Authorize(Roles = "Admin")]
+        //[HttpPost("UpdateCorrentUser")]
+        //public async Task<IActionResult> UpdateCorrentUser(UpdateUserCommand command) // Create new updateCorrent user command
+        //{
+        //    var currentUsername = HttpContext.User.FindFirstValue(ClaimTypes.Name) ?? string.Empty;
+        //    command.Username = currentUsername;
+        //    var updateUser = await _mediator.Send(command);
+        //    if (updateUser is not null) return Ok(updateUser);
+        //    return NotFound();
+        //}
 
         [Authorize(Roles = "Admin")]
         [HttpDelete("DeleteByNames")]
-        public async Task<IActionResult> Delete(DeleteUserByNameCommand command)
+        public async Task<IActionResult> Delete(DeleteUsersByNamesCommand command)
         {
             var response = await _mediator.Send(command);
             if (response == true)
@@ -85,7 +86,7 @@ namespace WebApi.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpDelete("DeleteById")]
-        public async Task<IActionResult> Delete(DeleteUserByIdCommand command)
+        public async Task<IActionResult> Delete(DeleteUsersByIdCommand command)
         {
             var response = await _mediator.Send(command);
             if (response == true)

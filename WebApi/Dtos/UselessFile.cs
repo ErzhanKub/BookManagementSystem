@@ -1,6 +1,4 @@
-﻿using Application.Users.Commands;
-
-namespace WebApi.Dtos
+﻿namespace WebApi.Dtos
 {
     public static class UselessFile
     {

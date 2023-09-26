@@ -1,21 +1,15 @@
-﻿using Domain.Enums;
+﻿using Application.Users.Dtos;
 using Domain.Repositories;
 using MediatR;
 
 namespace Application.Users.Requests
 {
-    public record GetSomeUsersResponse
+    public record GetSomeUsersQuery : IRequest<IEnumerable<UserDto>>
     {
-        public Guid Id { get; init; }
-        public required string Username { get; init; }
-        public required Role Role { get; init; }
-    }
-    public record GetSomeUsersCommand : IRequest<IEnumerable<GetSomeUsersResponse>>
-    {
-        public required string[] Username { get; init; }
+        public required string[] Usernames { get; init; }
     }
 
-    internal class GetSomeUsersHandler : IRequestHandler<GetSomeUsersCommand, IEnumerable<GetSomeUsersResponse>>
+    internal class GetSomeUsersHandler : IRequestHandler<GetSomeUsersQuery, IEnumerable<UserDto>>
     {
         private readonly IUserRepository _userRepository;
 
@@ -24,13 +18,13 @@ namespace Application.Users.Requests
             _userRepository = userRepository;
         }
 
-        public async Task<IEnumerable<GetSomeUsersResponse>> Handle(GetSomeUsersCommand request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<UserDto>> Handle(GetSomeUsersQuery request, CancellationToken cancellationToken)
         {
-            var users = await _userRepository.GetSomeUsersByNames(request.Username);
-            var response = new List<GetSomeUsersResponse>();
+            var users = await _userRepository.GetSomeUsersByNamesAsync(request.Usernames).ConfigureAwait(false);
+            var response = new List<UserDto>();
             foreach (var user in users)
             {
-                var result = new GetSomeUsersResponse
+                var result = new UserDto
                 {
                     Id = user.Id,
                     Username = user.Username,

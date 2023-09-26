@@ -1,34 +1,27 @@
-﻿using Domain.Repositories;
+﻿using Application.Books.Dtos;
+using Domain.Repositories;
 using MediatR;
 
 namespace Application.Books.Requests
 {
-    public record GetBooksResponse
-    {
-        public Guid Id { get; init; }
-        public required string Title { get; init; }
-        public string? Description { get; init; }
-        public decimal Price { get; init; }
-    }
+    public record GetAllBooksQuery : IRequest<IEnumerable<BookDto>> { }
 
-    public record GetAllBooksRequest : IRequest<IEnumerable<GetBooksResponse>> { }
-
-    internal class GetAllBookHandler : IRequestHandler<GetAllBooksRequest, IEnumerable<GetBooksResponse>>
+    internal class GetAllBooksHandler : IRequestHandler<GetAllBooksQuery, IEnumerable<BookDto>>
     {
         private readonly IBookRepository _bookRepository;
 
-        public GetAllBookHandler(IBookRepository bookRepository)
+        public GetAllBooksHandler(IBookRepository bookRepository)
         {
             _bookRepository = bookRepository;
         }
 
-        public async Task<IEnumerable<GetBooksResponse>> Handle(GetAllBooksRequest request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<BookDto>> Handle(GetAllBooksQuery request, CancellationToken cancellationToken)
         {
             var books = await _bookRepository.GetAllAsync().ConfigureAwait(false);
-            var response = new List<GetBooksResponse>();
+            var response = new List<BookDto>();
             foreach (var book in books)
             {
-                var result = new GetBooksResponse()
+                var result = new BookDto()
                 {
                     Id = book.Id,
                     Title = book.Title,

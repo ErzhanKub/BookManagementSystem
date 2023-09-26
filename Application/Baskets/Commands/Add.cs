@@ -24,10 +24,10 @@ namespace Application.Baskets.Commands
             _bookRepository = bookRepository;
         }
 
-        public async Task<bool> Handle(AddBookToBasketCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(AddBookToBasketCommand command, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetUserByName(request.Username).ConfigureAwait(false);
-            var book = await _bookRepository.GetByTitle(request.Title).ConfigureAwait(false);
+            var user = await _userRepository.GetUserByNameAsync(command.Username).ConfigureAwait(false);
+            var book = await _bookRepository.GetByTitleAsync(command.Title).ConfigureAwait(false);
 
             if (user is not null && book is not null)
             {

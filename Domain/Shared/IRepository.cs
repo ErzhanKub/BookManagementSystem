@@ -1,6 +1,4 @@
-﻿using Domain.Entities;
-
-namespace Domain.Shared
+﻿namespace Domain.Shared
 {
     /// <summary>
     /// Represents a repository for working with entities.
