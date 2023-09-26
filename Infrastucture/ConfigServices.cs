@@ -9,8 +9,20 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastucture
 {
+    /// <summary>
+    /// Adds infrastructure services to the service collection.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="configuration">The configuration.</param>
+    /// <returns>The updated service collection.</returns>
     public static class ConfigServices
     {
+        /// <summary>
+        /// Adds infrastructure services.
+        /// </summary>
+        /// <param name="services">The service collection.</param>
+        /// <param name="configuration">The configuration.</param>
+        /// <returns>The updated service collection.</returns>
         public static IServiceCollection AddInfrastructure(
             this IServiceCollection services,
             IConfiguration configuration)
@@ -27,4 +39,5 @@ namespace Infrastucture
             return services;
         }
     }
+
 }
