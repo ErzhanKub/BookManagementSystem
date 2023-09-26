@@ -6,20 +6,20 @@ namespace WebApi.Dtos
     {
         public static string Gentleman(string input)
         {
-            string result = null!;
+            string output = null!;
             if (input == "erzhan")
-                result = "https://github.com/ErzhanKub";
-            return result!;
+                output = "https://github.com/ErzhanKub";
+            return output!;
         }
 
         public static string NeverGiveUp(string input)
         {
-            string result = null!;
+            string output = null!;
 
             if (input == "nevergiveup")
-                result = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+                output = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 
-            return result!;
+            return output!;
         }
     }
 }
