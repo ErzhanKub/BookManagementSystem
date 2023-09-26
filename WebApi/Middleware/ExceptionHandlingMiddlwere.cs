@@ -3,11 +3,19 @@ using WebApi.Dtos;
 
 namespace WebApi.Middlewere
 {
+    /// <summary>
+    /// The ExceptionHandlingMiddlwere class is a middleware that handles exceptions in the HTTP request pipeline.
+    /// </summary>
     public class ExceptionHandlingMiddlwere
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionHandlingMiddlwere> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the ExceptionHandlingMiddlwere class.
+        /// </summary>
+        /// <param name="next">The next middleware in the HTTP request pipeline.</param>
+        /// <param name="logger">An instance of ILogger.</param>
         public ExceptionHandlingMiddlwere(RequestDelegate next,
             ILogger<ExceptionHandlingMiddlwere> logger)
         {
@@ -15,6 +23,10 @@ namespace WebApi.Middlewere
             _logger = logger;
         }
 
+        /// <summary>
+        /// Invokes the middleware.
+        /// </summary>
+        /// <param name="httpContext">The HttpContext for the current request and response.</param>
         public async Task InvokeAsync(HttpContext httpContext)
         {
             try
@@ -29,6 +41,13 @@ namespace WebApi.Middlewere
             }
         }
 
+        /// <summary>
+        /// Handles exceptions by logging the error and returning an error response.
+        /// </summary>
+        /// <param name="context">The HttpContext for the current request and response.</param>
+        /// <param name="exMassage">The exception message.</param>
+        /// <param name="httpStatusCode">The HTTP status code to return in the response.</param>
+        /// <param name="massage">The error message to return in the response.</param>
         private async Task HandleExeptionAsync(HttpContext context,
             string exMassage, HttpStatusCode httpStatusCode, string massage)
         {
@@ -47,4 +66,5 @@ namespace WebApi.Middlewere
             await response.WriteAsJsonAsync(errorDto);
         }
     }
+
 }

@@ -9,11 +9,19 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    /// <summary>
+    /// The BasketController class is responsible for handling basket related requests.
+    /// </summary>
     public class BasketController : ControllerBase
     {
         private readonly IMediator _mediator;
         private readonly ILogger<BasketController> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the BasketController class.
+        /// </summary>
+        /// <param name="mediator">An instance of IMediator.</param>
+        /// <param name="logger">An instance of ILogger.</param>
         public BasketController(IMediator mediator, ILogger<BasketController> logger)
         {
             _mediator = mediator;
@@ -21,6 +29,10 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("GetForUser")]
+        /// <summary>
+        /// Retrieves the books in the basket for the currently logged in user.
+        /// </summary>
+        /// <returns>A list of books in the user's basket; otherwise, a NotFound response.</returns>
         public async Task<IActionResult> Get()
         {
             var username = HttpContext.User.FindFirstValue(ClaimTypes.Name) ?? string.Empty;
@@ -36,6 +48,11 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("GetForAdmin")]
+        /// <summary>
+        /// Retrieves the books in the basket for a specified user. This method is intended for use by administrators.
+        /// </summary>
+        /// <param name="request">The request containing the username of the user whose basket to retrieve.</param>
+        /// <returns>A list of books in the specified user's basket.</returns>
         public async Task<IActionResult> GetForAdmin(GetBooksFromBasketQuery request)
         {
             var response = await _mediator.Send(request);
@@ -43,6 +60,11 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("AddForUser")]
+        /// <summary>
+        /// Adds a book to the basket for the currently logged in user.
+        /// </summary>
+        /// <param name="title">The title of the book to add to the basket.</param>
+        /// <returns>An Ok response if the book was added successfully; otherwise, a NotFound response.</returns>
         public async Task<IActionResult> Add(string title)
         {
             if (title.IsNullOrEmpty()) return BadRequest("Title is null");
@@ -63,6 +85,11 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("AddForAdmin")]
+        /// <summary>
+        /// Adds a book to the basket for a specified user. This method is intended for use by administrators.
+        /// </summary>
+        /// <param name="command">The command to add a book to a user's basket, containing the title of the book and the username of the user.</param>
+        /// <returns>An Ok response if the book was added successfully; otherwise, a NotFound response.</returns>
         public async Task<IActionResult> Add(AddBookToBasketCommand command)
         {
             if (command.Title.IsNullOrEmpty()) return BadRequest("Title is null");
@@ -75,6 +102,11 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("DeleteForAdmin")]
+        /// <summary>
+        /// Deletes a book from a specified user's basket. This method is intended for use by administrators.
+        /// </summary>
+        /// <param name="command">The command to delete a book from a user's basket, containing the title of the book and the username of the user.</param>
+        /// <returns>An Ok response if the book was deleted successfully; otherwise, a NotFound response.</returns>
         public async Task<IActionResult> Delete(DeleteBooksByTitleFromBasketCommand command)
         {
             var response = await _mediator.Send(command);
@@ -83,6 +115,11 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("DeleteForUser")]
+        /// <summary>
+        /// Deletes a book from the currently logged in user's basket.
+        /// </summary>
+        /// <param name="title">The title of the book to delete from the basket.</param>
+        /// <returns>An Ok response if the book was deleted successfully; otherwise, a NotFound response.</returns>
         public async Task<IActionResult> Delete(string[] title)
         {
             var username = HttpContext.User.FindFirstValue(ClaimTypes.Name) ?? string.Empty;
@@ -100,4 +137,5 @@ namespace WebApi.Controllers
             return NotFound();
         }
     }
+
 }
