@@ -36,6 +36,8 @@ namespace WebApi.Controllers
         [HttpPost("GetByTitle")]
         public async Task<IActionResult> GetByTitle(GetBookByTitleRequest request)
         {
+            if (request.Title.IsNullOrEmpty()) return BadRequest("Title is null");
+
             var easterEgg = UselessFile.NeverGiveUp(request.Title);
             if (easterEgg is not null)
                 return Ok(easterEgg);
@@ -58,10 +60,10 @@ namespace WebApi.Controllers
         [HttpPost("Create")]
         public async Task<IActionResult> Create(CreateBookCommand command)
         {
-            if (command.Title.IsNullOrEmpty())
-                return BadRequest("Title cannot be empty");
+
             if (command.Price < 0)
                 return BadRequest($"Price cannot be negative {command.Price}");
+
             var response = await _mediator.Send(command);
             return Ok(response);
         }
@@ -70,28 +72,31 @@ namespace WebApi.Controllers
         [HttpPost("Update")]
         public async Task<IActionResult> Update(UpdateBookCommand command)
         {
+            if (command.Title.IsNullOrEmpty())
+                return BadRequest("Title cannot be empty");
+
             var response = await _mediator.Send(command);
             if (response is not null) return Ok(response);
             return BadRequest();
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpDelete("DeleteByTitle")]
+        [HttpDelete("DeleteByTitles")]
         public async Task<IActionResult> Delete(DeleteBookByTitleCommand command)
         {
             var result = await _mediator.Send(command);
             if (result == true)
-                return Ok("Book deleted.");
+                return Ok("Book(s) deleted.");
             return NotFound();
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpDelete("DeleteById")]
+        [HttpDelete("DeleteById's")]
         public async Task<IActionResult> Delete(DeleteBookByIdCommand command)
         {
             var result = await _mediator.Send(command);
             if (result == true)
-                return Ok("Book deleted.");
+                return Ok("Book(s) deleted.");
             return NotFound();
         }
     }

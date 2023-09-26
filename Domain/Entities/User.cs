@@ -19,14 +19,14 @@ namespace Domain.Entities
         /// Имя пользователя типа string. 
         /// По умолчанию установлено пустое значение.
         /// </summary>
-        public string Username { get; set; } = string.Empty;
+        public required string Username { get; set; }
         /// <summary>
         /// User password hash of type string. 
         /// The default value is empty.
         /// Хэш пароля пользователя типа string. 
         /// По умолчанию установлено пустое значение.
         /// </summary>
-        public string PasswordHash { get; set; } = string.Empty;
+        public required string PasswordHash { get; set; }
         /// <summary>
         /// User role of type Role.
         /// Роль пользователя типа Role.

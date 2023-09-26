@@ -9,12 +9,12 @@ namespace Application.Baskets.Requests
         public List<Book> Books { get; init; } = new();
     }
 
-    public record GetBooksFromBasketCommand : IRequest<GetBooksFromBasketResponse?>
+    public record GetBooksFromBasketRequest : IRequest<GetBooksFromBasketResponse?>
     {
         public required string Username { get; init; }
     }
 
-    internal class GetBooksFromBasketHandler : IRequestHandler<GetBooksFromBasketCommand, GetBooksFromBasketResponse?>
+    internal class GetBooksFromBasketHandler : IRequestHandler<GetBooksFromBasketRequest, GetBooksFromBasketResponse?>
     {
         private readonly IUserRepository _userRepository;
 
@@ -23,7 +23,7 @@ namespace Application.Baskets.Requests
             _userRepository = userRepository;
         }
 
-        public async Task<GetBooksFromBasketResponse?> Handle(GetBooksFromBasketCommand request, CancellationToken cancellationToken)
+        public async Task<GetBooksFromBasketResponse?> Handle(GetBooksFromBasketRequest request, CancellationToken cancellationToken)
         {
             var users = await _userRepository.GetSomeUsersByNames(request.Username).ConfigureAwait(false);
             if (users is not null)

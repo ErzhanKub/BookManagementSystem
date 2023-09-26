@@ -4,6 +4,7 @@ using Application.Users.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
 namespace WebApi.Controllers
@@ -34,6 +35,7 @@ namespace WebApi.Controllers
         [HttpPost("GetByName")]
         public async Task<IActionResult> GetByName(GetUserByNameCommand command)
         {
+            if (command.Username.IsNullOrEmpty()) return BadRequest("Username is null");
             var user = await _mediator.Send(command);
             if (user is not null)
                 return Ok(user);
@@ -52,6 +54,7 @@ namespace WebApi.Controllers
         [HttpPost("Update")]
         public async Task<IActionResult> Update(UpdateUserCommand command)
         {
+            if (command.Username.IsNullOrEmpty()) return BadRequest("Username is null");
             var user = await _mediator.Send(command);
             if (user is not null)
                 return Ok(user);
@@ -61,7 +64,7 @@ namespace WebApi.Controllers
         [Authorize(Roles = "User")]
         [Authorize(Roles = "Admin")]
         [HttpPost("UpdateCorrentUser")]
-        public async Task<IActionResult> UpdateCorrentUser(UpdateUserCommand command)
+        public async Task<IActionResult> UpdateCorrentUser(UpdateUserCommand command) // Create new updateCorrent user command
         {
             var currentUsername = HttpContext.User.FindFirstValue(ClaimTypes.Name) ?? string.Empty;
             command.Username = currentUsername;
