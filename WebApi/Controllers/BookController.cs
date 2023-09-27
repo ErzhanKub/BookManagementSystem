@@ -1,11 +1,14 @@
 ﻿using Application.Books.Commands;
 using Application.Books.Commands.Delete;
+using Application.Books.Dtos;
 using Application.Books.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using WebApi.Dtos;
+using WebApi.Services;
 
 namespace WebApi.Controllers
 {
@@ -142,6 +145,29 @@ namespace WebApi.Controllers
             if (result == true)
                 return Ok("Book(s) deleted.");
             return NotFound();
+        }
+
+        [HttpGet("UseDummyApi")]
+        public async Task<IActionResult> UseDummyApi()
+        {
+            var client = new HttpClient();
+            var data = await client.GetStringAsync("https://jsonplaceholder.typicode.com/todos");
+            var todos = JsonConvert.DeserializeObject<List<TodoDto>>(data);
+
+            if (todos is null) throw new ArgumentNullException(nameof(todos));
+
+            var rnd = new Random();
+
+            foreach (var todo in todos)
+            {
+                var command = new CreateBookCommand
+                {
+                    Title = todo.Title!,
+                    Price = (decimal)(rnd.NextDouble() * 100)
+                };
+                _ = await _mediator.Send(command);
+            }
+            return Ok();
         }
     }
 

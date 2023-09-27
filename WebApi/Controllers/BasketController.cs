@@ -1,6 +1,7 @@
 ﻿using Application.Baskets.Commands;
 using Application.Baskets.Requests;
 using Application.Orders.Commands;
+using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -142,6 +143,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> Checkout(string adress)
         {
             var username = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+            if (username is null) throw new ArgumentNullException(nameof(username));
             var query = new CreateOrderCommand
             {
                 Adress = adress,
