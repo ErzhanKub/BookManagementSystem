@@ -42,6 +42,7 @@ namespace Infrastucture.DataBase
                 .IsUnique();
             modelBuilder.Entity<User>().Navigation(u => u.Basket).AutoInclude();
             modelBuilder.Entity<Basket>().Navigation(b => b.Books).AutoInclude();
+            modelBuilder.Entity<Order>().Navigation(o => o.Books).AutoInclude();
         }
     }
 

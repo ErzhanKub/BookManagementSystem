@@ -39,6 +39,9 @@ namespace Domain.Entities
         /// По умолчанию создается новая корзина.
         /// </summary>
         public Basket Basket { get; set; } = new();
+        /// <summary>
+        /// User's orders
+        /// </summary>
         public List<Order> Orders { get; set; } = new();
     }
 }

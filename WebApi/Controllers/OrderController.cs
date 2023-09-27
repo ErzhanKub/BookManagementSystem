@@ -27,7 +27,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("GetOne")]
-        public async Task<IActionResult> GetOne(GetOneOrderQuery query)
+        public async Task<IActionResult> GetOne(GetOrdersForUserQuery query)
         {
             var response = await _mediator.Send(query);
             return Ok(response);
