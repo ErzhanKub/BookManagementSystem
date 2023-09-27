@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using Serilog;
+using System.Net;
 using WebApi.Dtos;
 
 namespace WebApi.Middlewere
