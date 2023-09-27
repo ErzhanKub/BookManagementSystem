@@ -29,6 +29,8 @@ namespace Infrastucture.DataBase
         /// </summary>
         public DbSet<Basket> Baskets => Set<Basket>();
 
+        public DbSet<Order> Orders => Set<Order>();
+
         /// <inheritdoc/>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

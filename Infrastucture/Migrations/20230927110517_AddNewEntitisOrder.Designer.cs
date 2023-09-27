@@ -4,6 +4,7 @@ using Infrastucture.DataBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastucture.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230927110517_AddNewEntitisOrder")]
+    partial class AddNewEntitisOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,9 +54,6 @@ namespace Infrastucture.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("OrderId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
@@ -64,8 +64,6 @@ namespace Infrastucture.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BasketId");
-
-                    b.HasIndex("OrderId");
 
                     b.HasIndex("Title")
                         .IsUnique();
@@ -93,8 +91,6 @@ namespace Infrastucture.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Orders");
                 });
@@ -138,29 +134,9 @@ namespace Infrastucture.Migrations
                     b.HasOne("Domain.Entities.Basket", null)
                         .WithMany("Books")
                         .HasForeignKey("BasketId");
-
-                    b.HasOne("Domain.Entities.Order", null)
-                        .WithMany("Books")
-                        .HasForeignKey("OrderId");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Order", b =>
-                {
-                    b.HasOne("Domain.Entities.User", "User")
-                        .WithMany("Orders")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Entities.Basket", b =>
-                {
-                    b.Navigation("Books");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Order", b =>
                 {
                     b.Navigation("Books");
                 });
@@ -169,8 +145,6 @@ namespace Infrastucture.Migrations
                 {
                     b.Navigation("Basket")
                         .IsRequired();
-
-                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

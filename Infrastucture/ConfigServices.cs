@@ -35,6 +35,7 @@ namespace Infrastucture
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IBookRepository, BookRepository>();
+            services.AddTransient<IOrderRepository, OrderRepository>();
 
             return services;
         }

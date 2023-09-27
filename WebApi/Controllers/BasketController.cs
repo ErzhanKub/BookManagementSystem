@@ -1,5 +1,6 @@
 ﻿using Application.Baskets.Commands;
 using Application.Baskets.Requests;
+using Application.Orders.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -135,6 +136,19 @@ namespace WebApi.Controllers
             var response = await _mediator.Send(command);
             if (response) return Ok("Book");
             return NotFound();
+        }
+
+        [HttpPost("Checkout")]
+        public async Task<IActionResult> Checkout(string adress)
+        {
+            var username = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+            var query = new CreateOrderCommand
+            {
+                Adress = adress,
+                Username = username
+            };
+            var response = await _mediator.Send(query);
+            return Ok(response);
         }
     }
 
