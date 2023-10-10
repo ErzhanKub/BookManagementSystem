@@ -1,6 +1,5 @@
 ﻿using Domain.Entities;
 using Domain.Repositories;
-using MediatR;
 
 namespace Application.Baskets.Requests
 {

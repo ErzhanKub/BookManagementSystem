@@ -1,5 +1,4 @@
 ﻿using Domain.Repositories;
-using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

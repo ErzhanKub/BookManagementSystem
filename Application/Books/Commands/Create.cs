@@ -1,49 +1,59 @@
 ﻿using Application.Books.Dtos;
+using Application.Extensions;
 using Application.Shared;
 using Domain.Entities;
 using Domain.Repositories;
-using MediatR;
+using Mapster;
 
 namespace Application.Books.Commands
 {
     /// <summary>
     /// Class representing a command to create a book.
     /// </summary>
-    public record CreateBookCommand : IRequest<BookDto>
+    public record CreateBookCommand : IRequest<Result<BookDto>>
     {
-        /// <summary>
-        /// The title of the book.
-        /// </summary>
-        public required string Title { get; init; }
+        public BookDto? Book { get; set; }
+    }
 
-        /// <summary>
-        /// The description of the book.
-        /// </summary>
-        public string? Description { get; init; }
+    public class CreateBookCommandValidator : AbstractValidator<CreateBookCommand>
+    {
+        public CreateBookCommandValidator()
+        {
+            RuleFor(c => c.Book)
+                .NotNull();
 
-        /// <summary>
-        /// The price of the book.
-        /// </summary>
-        public decimal Price { get; init; }
+            When(c => c.Book != null,
+                () =>
+                {
+                    RuleFor(c => c.Book!.Title)
+                        .NotEmpty()
+                        .WithMessage("{PropertyName} обязательное поле")
+                        .Length(1, 200);
+
+                    RuleFor(c => c.Book!.Price).GreaterThanOrEqualTo(0);
+                });
+        }
     }
 
     /// <summary>
     /// Handler for the command to create a book.
     /// </summary>
-    internal class CreateBookHandler : IRequestHandler<CreateBookCommand, BookDto>
+    internal class CreateBookHandler : IRequestHandler<CreateBookCommand, Result<BookDto>>
     {
         private readonly IBookRepository _bookRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IValidator<CreateBookCommand> _validator;
 
         /// <summary>
         /// Constructor for the class.
         /// </summary>
         /// <param name="bookRepository">The book repository.</param>
         /// <param name="unitOfWork">The unit of work.</param>
-        public CreateBookHandler(IBookRepository bookRepository, IUnitOfWork unitOfWork)
+        public CreateBookHandler(IBookRepository bookRepository, IUnitOfWork unitOfWork, IValidator<CreateBookCommand> validator)
         {
             _bookRepository = bookRepository;
             _unitOfWork = unitOfWork;
+            _validator = validator;
         }
 
         /// <summary>
@@ -52,29 +62,26 @@ namespace Application.Books.Commands
         /// <param name="command">The command to create a book.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The created book data transfer object.</returns>
-        public async Task<BookDto> Handle(CreateBookCommand command, CancellationToken cancellationToken)
+        public async Task<Result<BookDto>> Handle(CreateBookCommand command, CancellationToken cancellationToken)
         {
+            var validationResult = _validator.Validate(command);
+            if (!validationResult.IsValid)
+                return Result.Fail(validationResult.Errors.MapToErrors());
+
             var book = new Book
             {
-                Title = command.Title,
-                Description = command.Description,
-                Price = command.Price,
+                Id = Guid.NewGuid(),
+                Title = command.Book.Title,
+                Description = command.Book.Description,
+                Price = command.Book.Price,
             };
 
             await _bookRepository.CreateAsync(book).ConfigureAwait(false);
             await _unitOfWork.CommitAsync().ConfigureAwait(false);
 
-            var response = new BookDto
-            {
-                Id = book.Id,
-                Title = book.Title,
-                Description = book.Description,
-                Price = book.Price,
-            };
+            var response = book.Adapt<BookDto>();
 
-            return response;
+            return Result.Ok(response);
         }
     }
-
-
 }

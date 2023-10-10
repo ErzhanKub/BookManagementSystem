@@ -1,14 +1,11 @@
 ﻿using Application.Books.Commands;
 using Application.Books.Commands.Delete;
-using Application.Books.Dtos;
 using Application.Books.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
 using WebApi.Dtos;
-using WebApi.Services;
 
 namespace WebApi.Controllers
 {
@@ -92,12 +89,11 @@ namespace WebApi.Controllers
         /// <returns>An Ok response if the book was created successfully; otherwise, a BadRequest response.</returns>
         public async Task<IActionResult> Create(CreateBookCommand command)
         {
-            if (command.Title.IsNullOrEmpty()) return BadRequest("Title is null");
-            if (command.Price < 0)
-                return BadRequest($"Price cannot be negative {command.Price}");
-
             var response = await _mediator.Send(command);
-            return Ok(response);
+            if (response.IsFailed)
+                return BadRequest(response.Reasons);
+
+            return Created($"api/books/{response.Value.Id}", response);
         }
 
         [Authorize(Roles = "Admin")]
@@ -147,28 +143,28 @@ namespace WebApi.Controllers
             return NotFound();
         }
 
-        [HttpGet("UseDummyApi")]
-        public async Task<IActionResult> UseDummyApi()
-        {
-            var client = new HttpClient();
-            var data = await client.GetStringAsync("https://jsonplaceholder.typicode.com/todos");
-            var todos = JsonConvert.DeserializeObject<List<TodoDto>>(data);
+        //[HttpGet("UseDummyApi")]
+        //public async Task<IActionResult> UseDummyApi()
+        //{
+        //    var client = new HttpClient();
+        //    var data = await client.GetStringAsync("https://jsonplaceholder.typicode.com/todos");
+        //    var todos = JsonConvert.DeserializeObject<List<TodoDto>>(data);
 
-            if (todos is null) throw new ArgumentNullException(nameof(todos));
+        //    if (todos is null) throw new ArgumentNullException(nameof(todos));
 
-            var rnd = new Random();
+        //    var rnd = new Random();
 
-            foreach (var todo in todos)
-            {
-                var command = new CreateBookCommand
-                {
-                    Title = todo.Title!,
-                    Price = (decimal)(rnd.NextDouble() * 100)
-                };
-                _ = await _mediator.Send(command);
-            }
-            return Ok();
-        }
+        //    foreach (var todo in todos)
+        //    {
+        //        var command = new CreateBookCommand
+        //        {
+        //            Book.Title = todo.Title!,
+        //            Price = (decimal)(rnd.NextDouble() * 100)
+        //        };
+        //        _ = await _mediator.Send(command);
+        //    }
+        //    return Ok();
+        //}
     }
 
 }

@@ -3,7 +3,6 @@ using Application.Users.Dtos;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Repositories;
-using MediatR;
 
 
 namespace Application.Users.Commands

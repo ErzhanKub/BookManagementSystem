@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Application.Books.Commands;
+using Application.Pipelines;
+using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace Application
@@ -19,6 +21,13 @@ namespace Application
         {
             services.AddMediatR(config => config.RegisterServicesFromAssemblies(
                     Assembly.GetExecutingAssembly()));
+
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+            services.AddTransient(
+               typeof(IPipelineBehavior<,>),
+               typeof(ValidationPipeline<,>));
+
             return services;
         }
     }

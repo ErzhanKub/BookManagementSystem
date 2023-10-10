@@ -1,7 +1,5 @@
 ﻿using Application.Orders.Dtos;
-using Domain.Entities;
 using Domain.Repositories;
-using MediatR;
 
 namespace Application.Orders.Requests
 {

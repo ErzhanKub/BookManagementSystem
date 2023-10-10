@@ -3,7 +3,6 @@ using Application.Shared;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Repositories;
-using MediatR;
 
 namespace Application.Orders.Commands
 {

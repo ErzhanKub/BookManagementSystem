@@ -1,6 +1,5 @@
 ﻿using Application.Books.Dtos;
 using Domain.Repositories;
-using MediatR;
 
 namespace Application.Books.Requests
 {

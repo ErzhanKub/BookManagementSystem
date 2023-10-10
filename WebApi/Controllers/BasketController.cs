@@ -1,7 +1,6 @@
 ﻿using Application.Baskets.Commands;
 using Application.Baskets.Requests;
 using Application.Orders.Commands;
-using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;

@@ -1,6 +1,5 @@
 ﻿using Application.Users.Dtos;
 using Domain.Repositories;
-using MediatR;
 
 namespace Application.Users.Requests
 {

@@ -8,7 +8,7 @@
         /// <summary>
         /// The unique identifier of the book.
         /// </summary>
-        public Guid Id { get; init; }
+        public Guid Id { get; init; } = Guid.Empty;
 
         /// <summary>
         /// The title of the book.

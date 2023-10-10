@@ -1,7 +1,6 @@
 ﻿using Application.Books.Dtos;
 using Application.Shared;
 using Domain.Repositories;
-using MediatR;
 
 namespace Application.Books.Commands
 {
