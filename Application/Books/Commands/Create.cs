@@ -3,7 +3,7 @@ using Application.Extensions;
 using Application.Shared;
 using Domain.Entities;
 using Domain.Repositories;
-using Mapster;
+
 
 namespace Application.Books.Commands
 {
@@ -42,18 +42,16 @@ namespace Application.Books.Commands
     {
         private readonly IBookRepository _bookRepository;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IValidator<CreateBookCommand> _validator;
 
         /// <summary>
         /// Constructor for the class.
         /// </summary>
         /// <param name="bookRepository">The book repository.</param>
         /// <param name="unitOfWork">The unit of work.</param>
-        public CreateBookHandler(IBookRepository bookRepository, IUnitOfWork unitOfWork, IValidator<CreateBookCommand> validator)
+        public CreateBookHandler(IBookRepository bookRepository, IUnitOfWork unitOfWork)
         {
             _bookRepository = bookRepository;
             _unitOfWork = unitOfWork;
-            _validator = validator;
         }
 
         /// <summary>
@@ -64,10 +62,6 @@ namespace Application.Books.Commands
         /// <returns>The created book data transfer object.</returns>
         public async Task<Result<BookDto>> Handle(CreateBookCommand command, CancellationToken cancellationToken)
         {
-            var validationResult = _validator.Validate(command);
-            if (!validationResult.IsValid)
-                return Result.Fail(validationResult.Errors.MapToErrors());
-
             var book = new Book
             {
                 Id = Guid.NewGuid(),

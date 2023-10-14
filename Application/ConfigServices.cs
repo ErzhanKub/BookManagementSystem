@@ -1,5 +1,4 @@
-﻿using Application.Books.Commands;
-using Application.Pipelines;
+﻿using Application.Pipelines;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 

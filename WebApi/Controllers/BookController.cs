@@ -53,12 +53,6 @@ namespace WebApi.Controllers
         /// <returns>The book with the specified title; otherwise, a NotFound response.</returns>
         public async Task<IActionResult> GetByTitle(GetBookByTitleQuery request)
         {
-            if (request.Title.IsNullOrEmpty()) return BadRequest("Title is null");
-
-            var easterEgg = UselessFile.NeverGiveUp(request.Title);
-            if (easterEgg is not null)
-                return Ok(easterEgg);
-
             var book = await _mediator.Send(request);
             if (book is not null)
                 return Ok(book);
@@ -74,8 +68,6 @@ namespace WebApi.Controllers
         /// <returns>A list of books with the specified title.</returns>
         public async Task<IActionResult> GetSome(GetBooksByTitleQuery request)
         {
-            if (request.Title.IsNullOrEmpty()) return BadRequest("Title is null");
-
             var books = await _mediator.Send(request);
             return Ok(books);
         }

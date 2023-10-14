@@ -6,12 +6,12 @@ namespace Application.Baskets.Commands
     /// <summary>
     /// Class representing a command to delete books from a user's basket by their titles.
     /// </summary>
-    public record DeleteBooksByTitleFromBasketCommand : IRequest<bool>
+    public record DeleteBooksByIdFromBasketCommand : IRequest<bool>
     {
         /// <summary>
-        /// The titles of the books to be deleted.
+        /// The Id of the books to be deleted.
         /// </summary>
-        public required string[] Title { get; init; }
+        public required Guid[] Id { get; init; }
 
         /// <summary>
         /// The username of the user whose basket is being modified.
@@ -22,7 +22,7 @@ namespace Application.Baskets.Commands
     /// <summary>
     /// Handler for the command to delete books from a user's basket by their titles.
     /// </summary>
-    internal class DeleteBooksFromBasket : IRequestHandler<DeleteBooksByTitleFromBasketCommand, bool>
+    internal class DeleteBooksFromBasket : IRequestHandler<DeleteBooksByIdFromBasketCommand, bool>
     {
         private readonly IUserRepository _userRepository;
         private readonly IUnitOfWork _unitOfWork;
@@ -47,10 +47,10 @@ namespace Application.Baskets.Commands
         /// <param name="command">The command to delete books.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>True if the books were deleted successfully, false otherwise.</returns>
-        public async Task<bool> Handle(DeleteBooksByTitleFromBasketCommand command, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeleteBooksByIdFromBasketCommand command, CancellationToken cancellationToken)
         {
             var user = await _userRepository.GetUserByNameAsync(command.Username).ConfigureAwait(false);
-            var books = await _bookRepository.GetSomeByTitleAsync(command.Title).ConfigureAwait(false);
+            var books = await _bookRepository.GetSomeByIdAsync(command.Id).ConfigureAwait(false);
 
             if (user != null && books != null)
             {

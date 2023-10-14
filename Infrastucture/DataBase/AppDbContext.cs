@@ -34,9 +34,6 @@ namespace Infrastucture.DataBase
         /// <inheritdoc/>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Book>()
-                .HasIndex(b => b.Title)
-                .IsUnique();
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Username)
                 .IsUnique();

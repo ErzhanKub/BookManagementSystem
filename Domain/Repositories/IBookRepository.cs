@@ -10,18 +10,18 @@ namespace Domain.Repositories
     public interface IBookRepository : IRepository<Book>
     {
         /// <summary>
-        /// Returns the book by the specified title.
+        /// Returns the book by the Id.
         /// Возвращает книгу по указанному названию.
         /// </summary>
         /// <param name="title"></param>
         /// <returns></returns>
-        Task<Book?> GetByTitleAsync(string title);
+        Task<Book?> GetByIdAsync(Guid id);
         /// <summary>
-        /// Returns a collection of books with the specified titles.
+        /// Returns a collection of books with the Id.
         /// Возвращает коллекцию книг по указанным названиям.
         /// </summary>
         /// <param name="titles"></param>
         /// <returns></returns>
-        Task<IEnumerable<Book>> GetSomeByTitleAsync(params string[] titles);
+        Task<IEnumerable<Book>> GetSomeByIdAsync(params Guid[] id);
     }
 }

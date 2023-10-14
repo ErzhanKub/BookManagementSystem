@@ -66,9 +66,9 @@ namespace WebApi.Controllers
         /// </summary>
         /// <param name="title">The title of the book to add to the basket.</param>
         /// <returns>An Ok response if the book was added successfully; otherwise, a NotFound response.</returns>
-        public async Task<IActionResult> Add(string title)
+        public async Task<IActionResult> Add(Guid id)
         {
-            if (title.IsNullOrEmpty()) return BadRequest("Title is null");
+           
 
             var username = HttpContext.User.FindFirstValue(ClaimTypes.Name) ?? string.Empty;
             if (username is null)
@@ -76,7 +76,7 @@ namespace WebApi.Controllers
 
             var command = new AddBookToBasketCommand
             {
-                Title = title,
+                Id = id,
                 Username = username
             };
             var response = await _mediator.Send(command);
@@ -93,9 +93,6 @@ namespace WebApi.Controllers
         /// <returns>An Ok response if the book was added successfully; otherwise, a NotFound response.</returns>
         public async Task<IActionResult> Add(AddBookToBasketCommand command)
         {
-            if (command.Title.IsNullOrEmpty()) return BadRequest("Title is null");
-            if (command.Username.IsNullOrEmpty()) return BadRequest("Username is null");
-
             var response = await _mediator.Send(command);
             if (response)
                 return Ok("Book add basket");
@@ -108,7 +105,7 @@ namespace WebApi.Controllers
         /// </summary>
         /// <param name="command">The command to delete a book from a user's basket, containing the title of the book and the username of the user.</param>
         /// <returns>An Ok response if the book was deleted successfully; otherwise, a NotFound response.</returns>
-        public async Task<IActionResult> Delete(DeleteBooksByTitleFromBasketCommand command)
+        public async Task<IActionResult> Delete(DeleteBooksByIdFromBasketCommand command)
         {
             var response = await _mediator.Send(command);
             if (response) return Ok("Book(s) deleted");
@@ -121,15 +118,15 @@ namespace WebApi.Controllers
         /// </summary>
         /// <param name="title">The title of the book to delete from the basket.</param>
         /// <returns>An Ok response if the book was deleted successfully; otherwise, a NotFound response.</returns>
-        public async Task<IActionResult> Delete(string[] title)
+        public async Task<IActionResult> Delete(Guid[] id)
         {
             var username = HttpContext.User.FindFirstValue(ClaimTypes.Name) ?? string.Empty;
             if (username is null)
                 return NotFound();
 
-            var command = new DeleteBooksByTitleFromBasketCommand
+            var command = new DeleteBooksByIdFromBasketCommand
             {
-                Title = title,
+                Id = id,
                 Username = username
             };
 

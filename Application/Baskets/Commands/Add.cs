@@ -12,7 +12,7 @@ namespace Application.Baskets.Commands
         /// <summary>
         /// The title of the book to be added.
         /// </summary>
-        public required string Title { get; init; }
+        public required Guid Id { get; init; }
 
         /// <summary>
         /// The username of the user whose basket is being modified.
@@ -51,7 +51,7 @@ namespace Application.Baskets.Commands
         public async Task<bool> Handle(AddBookToBasketCommand command, CancellationToken cancellationToken)
         {
             var user = await _userRepository.GetUserByNameAsync(command.Username).ConfigureAwait(false);
-            var book = await _bookRepository.GetByTitleAsync(command.Title).ConfigureAwait(false);
+            var book = await _bookRepository.GetByIdAsync(command.Id).ConfigureAwait(false);
 
             if (user is not null && book is not null)
             {

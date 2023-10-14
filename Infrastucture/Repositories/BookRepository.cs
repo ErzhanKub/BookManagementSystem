@@ -65,22 +65,22 @@ namespace Infrastucture.Repositories
         }
 
         /// <summary>
-        /// Gets a book by title asynchronously.
+        /// Gets a book by id asynchronously.
         /// </summary>
-        /// <param name="title">The title of the book to get.</param>
-        public async Task<Book?> GetByTitleAsync(string title)
+        /// <param name="id">The id of the book to get.</param>
+        public async Task<Book?> GetByIdAsync(Guid id)
         {
-            var book = await _appDbContext.Books.FirstOrDefaultAsync(b => b.Title == title);
+            var book = await _appDbContext.Books.FirstOrDefaultAsync(b => b.Id == id);
             return book ?? default;
         }
 
         /// <summary>
-        /// Gets some books by title asynchronously.
+        /// Gets some books by id asynchronously.
         /// </summary>
-        /// <param name="titles">The titles of the books to get.</param>
-        public async Task<IEnumerable<Book>> GetSomeByTitleAsync(params string[] titles)
+        /// <param name="titles">The id of the books to get.</param>
+        public async Task<IEnumerable<Book>> GetSomeByIdAsync(params Guid[] id)
         {
-            var books = await _appDbContext.Books.Where(b => titles.Contains(b.Title)).ToListAsync().ConfigureAwait(false);
+            var books = await _appDbContext.Books.Where(b => id.Contains(b.Id)).ToListAsync().ConfigureAwait(false);
             return books;
         }
 

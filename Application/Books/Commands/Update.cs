@@ -9,6 +9,7 @@ namespace Application.Books.Commands
     /// </summary>
     public record UpdateBookCommand : IRequest<BookDto?>
     {
+        public Guid Id { get; init; }
         /// <summary>
         /// The title of the book.
         /// </summary>
@@ -52,7 +53,7 @@ namespace Application.Books.Commands
         /// <returns>The updated book data transfer object or null.</returns>
         public async Task<BookDto?> Handle(UpdateBookCommand command, CancellationToken cancellationToken)
         {
-            var book = await _bookRepository.GetByTitleAsync(command.Title).ConfigureAwait(false);
+            var book = await _bookRepository.GetByIdAsync(command.Id).ConfigureAwait(false);
             if (book is not null)
             {
                 book.Title = command.Title;
@@ -62,13 +63,8 @@ namespace Application.Books.Commands
                 _bookRepository.Update(book);
                 await _unitOfWork.CommitAsync().ConfigureAwait(false);
 
-                var response = new BookDto
-                {
-                    Id = book.Id,
-                    Title = book.Title,
-                    Description = book.Description,
-                    Price = book.Price,
-                };
+                var response = book.Adapt<BookDto>();
+
                 return response;
             }
             return default;

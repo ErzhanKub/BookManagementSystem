@@ -11,7 +11,7 @@ namespace Application.Books.Requests
         /// <summary>
         /// The titles of the books to be retrieved.
         /// </summary>
-        public required string[] Title { get; init; }
+        public required Guid[] Id { get; init; }
     }
 
     /// <summary>
@@ -38,7 +38,7 @@ namespace Application.Books.Requests
         /// <returns>The collection of book data transfer objects.</returns>
         public async Task<IEnumerable<BookDto>> Handle(GetBooksByTitleQuery request, CancellationToken cancellationToken)
         {
-            var books = await _bookRepository.GetSomeByTitleAsync(request.Title).ConfigureAwait(false);
+            var books = await _bookRepository.GetSomeByIdAsync(request.Id).ConfigureAwait(false);
             var response = new List<BookDto>();
             foreach (var book in books)
             {

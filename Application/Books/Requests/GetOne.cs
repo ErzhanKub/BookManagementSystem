@@ -11,7 +11,7 @@ namespace Application.Books.Requests
         /// <summary>
         /// The title of the book to be retrieved.
         /// </summary>
-        public required string Title { get; init; }
+        public required Guid Id { get; init; }
     }
 
     /// <summary>
@@ -38,7 +38,7 @@ namespace Application.Books.Requests
         /// <returns>The book data transfer object or null.</returns>
         public async Task<BookDto?> Handle(GetBookByTitleQuery request, CancellationToken cancellationToken)
         {
-            var book = await _bookRepository.GetByTitleAsync(request.Title).ConfigureAwait(false);
+            var book = await _bookRepository.GetByIdAsync(request.Id).ConfigureAwait(false);
             if (book is not null)
             {
                 var response = new BookDto
